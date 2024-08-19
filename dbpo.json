@@ -1,0 +1,23 @@
+{
+    "no_po": "N2023002720",
+    "date_po": "25-07-2023",
+    "no_pp": "NS20231197",
+    "date_pp": "22-07-2023",
+    "date_eta": "30-09-2023",
+    "date_send": "26-09-2023",
+    "date_delivery_schedule": "30-09-2023",
+    "is_send": "YES",
+    "notes_po": "O/A NO.22714 ETD: W43/2023 ETA: W44/2023",
+    "item_code": "900900160190055",
+    "item_name": "MAINTENANCE ENGINEERING SKF",
+    "item_type": "SERVICES",
+    "item_spec": "SERVICES",
+    "is_no_stock": "YES",
+    "qty": "100.00",
+    "qty_remaining": "100.00",
+    "unit": "LOT ",
+    "price": "IDR 100000.00",
+    "po_detil_id": "205865",
+    "supplier_code": "2-0214",
+    "supplier_name": "DURASIV FAR EAST PTE LTD."
+}
