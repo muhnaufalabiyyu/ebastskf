@@ -69,6 +69,8 @@ class ApprovalController extends Controller
             $rrno = request('rrno');
 
             $user = Auth::user();
+            $data = DB::table('bast')->where('id_bast', $id)->first();
+
             if ($user->dept == 'EHS') {
                 $status = 2;
                 $notes = $request->input('ehsnotes');
@@ -101,13 +103,14 @@ class ApprovalController extends Controller
                         ->where('id_bast', $id)
                         ->update(['status' => $status, $usrappv => $userappv, 'rrno' => $rrno, 'rrdt' => Carbon::now(), 'rrusr' => $user->name, 'updated_at' => Carbon::now()]);
 
-                    // Mail::to('muhnaufalabiyyu@gmail.com')->send(new SKFMail());
                 });
             } elseif ($user->dept == 'EHS') {
                 DB::transaction(function () use ($id, $field, $field2, $status, $notes, $userappv, $usrappv, $rate) {
                     DB::table('bast')
                         ->where('id_bast', $id)
                         ->update(['status' => $status, $usrappv => $userappv, 'ehs_rate' => $rate, $field => Carbon::now(), $field2 => $notes, 'updated_at' => Carbon::now()]);
+
+
                 });
             } elseif ($user->acting == 2 && $user->gol == 4) {
                 // Untuk User
@@ -116,6 +119,8 @@ class ApprovalController extends Controller
                         DB::table('bast')
                             ->where('id_bast', $id)
                             ->update(['status' => $status, $usrappv => $userappv, $field => Carbon::now(), $field2 => $rate, $field3 => $notes, 'updated_at' => Carbon::now()]);
+
+
                     });
                 } else {
                     DB::transaction(function () use ($id, $field, $field2, $field3, $rate, $notes, $userappv, $usrappv) {
@@ -123,16 +128,19 @@ class ApprovalController extends Controller
                             ->where('id_bast', $id)
                             ->update([$usrappv => $userappv, $field => Carbon::now(), $field2 => $rate, $field3 => $notes, 'updated_at' => Carbon::now()]);
                     });
-                    // Mail::to('muhnaufalabiyyu@gmail.com')->send(new SKFMail());
                 }
             } else {
                 // Untuk Purchasing saja
                 DB::transaction(function () use ($id, $field, $status, $userappv, $usrappv) {
-                    DB::table('bast')
+                  DB::table('bast')
                         ->where('id_bast', $id)
                         ->update(['status' => $status, $usrappv => $userappv, $field => Carbon::now(), 'updated_at' => Carbon::now()]);
                 });
+
             }
+
+            //send mail
+            Mail::to('muhammadjakaria8@gmail.com')->send(new SKFMail($data));
 
             DB::table('activity')->insert(['name' => $userappv, 'activity' => 'approval', 'time' => Carbon::now()]);
 

@@ -41,7 +41,9 @@ Route::group(['middleware' => ['auth']], function () {
     Route::post('deny/{id}', 'ApprovalController@deny')->name('deny');
     Route::get('editbast/id_bast={id}&supplier_id={supplier_id}', 'HistoryController@editbast')->name('editbast');
     Route::post('inputedit', 'BastController@inputedit')->name('inputedit');
-    Route::get('/generate-pdf/id={id}&supplier_id={supplier_id}&action={action}', 'PDFController@generatePDF')->name('getpdf');
+    // Route::get('/generate-pdf/id={id}&supplier_id={supplier_id}&action={action}', 'PDFController@generatePDF')->name('getpdf');
+    Route::get('/generate-pdf/{id}/{supplier_id}/{action}', 'PDFController@generatePDF')->name('getpdf');
+
 });
 
 // Restrict supplier to get this route and redirect to home
@@ -49,7 +51,7 @@ Route::group(['middleware' => ['cekActing', 'auth']], function () {
     Route::get('approval', 'ApprovalController@index')->name('approval');
     Route::get('dashboard', 'DashboardController@index')->name('dashboard');
     // Route::get('user', 'DashboardController@userlogin')->name('user');
-    
+
     // Route User Control
     Route::get('userskf', 'UserController@skfuser')->name('userskf');
     Route::get('usersupplier', 'UserController@supplieruser')->name('usersupplier');
