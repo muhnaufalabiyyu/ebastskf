@@ -8,6 +8,7 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Session;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Carbon;
+use Illuminate\Support\Facades\Mail;
 use Exception;
 
 class BastController extends Controller
@@ -117,6 +118,19 @@ class BastController extends Controller
 
                 DB::table('bast')->insert($bastData);
             }, 5);
+
+            //send email to user APPROVAL OUTSTANDING
+            $sendMail = DB::table('departemen2')->select('emailmgr1', 'emailspv1')->where('alias','EHS')->get()
+                        ->flatMap(function ($item) {
+                            return [$item->emailmgr1, $item->emailspv1];
+                        })->toArray();
+            $approvalHeader = array('to' => 'EHS, Sustainability & BE', 'no' => $nextbastnum, 'note' => "-");
+            $mail = Mail::send('mail.approvalmail', ["data" => $approvalHeader], function ($message) use ($approvalHeader,$sendMail) {
+                $message->subject('Pemberitahuan Approval BAST: '.$approvalHeader['no']);
+                $message->to($sendMail);
+                // $message->cc('muhammadjakaria8@gmail.com');
+
+            });
 
             DB::table('activity')->insert(['name' => $user->supplier_id, 'activity' => 'createbast', 'time' => Carbon::now()]);
 
