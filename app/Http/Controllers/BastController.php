@@ -16,6 +16,12 @@ class BastController extends Controller
     public function store_bast(Request $request)
     {
         try {
+            $copypopath     = null;
+            $offerfilepath  = null;
+            $reportfilepath = null;
+            $enofafilepath  = null;
+            $fakturfilepath = null;
+
             $user = Auth::user();
             $copypo = $request->file('copypo');
             $offerfile = $request->file('offerfile');
@@ -26,26 +32,18 @@ class BastController extends Controller
             $copypofilename = uniqid() . '_' . $copypo->getClientOriginalName();
             $offerfilename = uniqid() . '_' . $offerfile->getClientOriginalName();
             $reportfilename = uniqid() . '_' . $reportfile->getClientOriginalName();
-            $enofafilename = uniqid() . '_' . $enofafile->getClientOriginalName();
-            $fakturfilename = uniqid() . '_' . $fakturfile->getClientOriginalName();
 
             $copypodestinationPath = 'storage/files/copypo/';
             $offerfiledestinationPath = 'storage/files/offerfile/';
             $reportfiledestinationPath = 'storage/files/reportfile/';
-            $enofafiledestinationPath = 'storage/files/enofa/';
-            $fakturfiledestinationPath = 'storage/files/faktur/';
 
             $copypopath = 'files/copypo/' . $copypofilename;
             $offerfilepath = 'files/offerfile/' . $offerfilename;
             $reportfilepath = 'files/reportfile/' . $reportfilename;
-            $enofafilepath = 'files/enofa/' . $enofafilename;
-            $fakturfilepath = 'files/faktur/' . $fakturfilename;
 
             Storage::disk('public')->putFileAs($copypodestinationPath, $copypo, $copypofilename);
             Storage::disk('public')->putFileAs($offerfiledestinationPath, $offerfile, $offerfilename);
             Storage::disk('public')->putFileAs($reportfiledestinationPath, $reportfile, $reportfilename);
-            Storage::disk('public')->putFileAs($enofafiledestinationPath, $enofafile, $enofafilename);
-            Storage::disk('public')->putFileAs($fakturfiledestinationPath, $fakturfile, $fakturfilename);
 
             $lastbast = DB::table('bast')
                 ->orderBy('id_bast', 'desc')
@@ -66,6 +64,22 @@ class BastController extends Controller
                 'XI' => 'November',
                 'XII' => 'December',
             ];
+
+            if($enofafile)
+            {
+                $enofafilename = uniqid() . '_' . $enofafile->getClientOriginalName();
+                $enofafiledestinationPath = 'storage/files/enofa/';
+                $enofafilepath = 'files/enofa/' . $enofafilename;
+                Storage::disk('public')->putFileAs($enofafiledestinationPath, $enofafile, $enofafilename);
+            }
+
+            if($fakturfile)
+            {
+                $fakturfilename = uniqid() . '_' . $fakturfile->getClientOriginalName();
+                $fakturfiledestinationPath = 'storage/files/faktur/';
+                $fakturfilepath = 'files/faktur/' . $fakturfilename;
+                Storage::disk('public')->putFileAs($fakturfiledestinationPath, $fakturfile, $fakturfilename);
+            }
 
             $months = $currentdate->format('n');
             $rom_month = array_search(date('F', mktime(0, 0, 0, $months, 1)), $romanized_arr);

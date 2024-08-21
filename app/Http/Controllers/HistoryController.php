@@ -23,7 +23,7 @@ class HistoryController extends Controller
     function detail($id, $supplier_id)
     {
         $detail = DB::table('bast')
-            ->select('*', DB::raw('DATE_FORMAT(bastdt, "%d-%m-%Y") as bast_dt'), DB::raw('DATE_FORMAT(workstart, "%d-%m-%Y") as work_start'), DB::raw('DATE_FORMAT(workend, "%d-%m-%Y") as work_end'), DB::raw('DATE_FORMAT(userappvdt, "%d-%m-%Y %H:%i:%s") as userappv_dt'), DB::raw('DATE_FORMAT(ehsappvdt, "%d-%m-%Y %H:%i:%s") as ehsappv_dt'), DB::raw('DATE_FORMAT(purchappvdt, "%d-%m-%Y %H:%i:%s") as purchappv_dt'), DB::raw('DATE_FORMAT(rrdt, "%d-%m-%Y %H:%i:%s") as rr_dt'), DB::raw('DATE_FORMAT(created_at, "%d-%m-%Y %H:%i:%s") as createdat'))
+            ->select("*", DB::raw("FORMAT(bastdt, 'dd-MM-yyyy') as bast_dt"), DB::raw("FORMAT(workstart, 'dd-MM-yyyy') as work_start"), DB::raw("FORMAT(workend, 'dd-MM-yyyy') as work_end"), DB::raw("FORMAT(userappvdt, 'dd-MM-yyyy HH:mm:ss') as userappv_dt"), DB::raw("FORMAT(ehsappvdt, 'dd-MM-yyyy HH:mm:ss') as ehsappv_dt"), DB::raw("FORMAT(purchappvdt, 'dd-MM-yyyy HH:mm:ss') as purchappv_dt"), DB::raw("FORMAT(rrdt, 'dd-MM-yyyy HH:mm:ss') as rr_dt"), DB::raw("FORMAT(created_at, 'dd-MM-yyyy HH:mm:ss') as createdat"))
             ->where('id_bast', $id)
             ->get();
 
