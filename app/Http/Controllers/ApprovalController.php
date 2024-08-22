@@ -110,7 +110,8 @@ class ApprovalController extends Controller
                 $headerMail = array('to' => $supp->supplier_name, 'no' => $data->bastno, 'note' => "-");
                 $mail = Mail::send('mail.suppliermail', ["data" => $headerMail], function ($message) use ($supp) {
                     $message->subject('Pemberitahuan approval BAST telah selesai');
-                    $message->to($supp->email);
+                    $message->to('muhammadjakaria8@gmail.com');
+                    // $message->to($supp->email);
                     // $message->cc('muhammadjakaria8@gmail.com');
 
                 });
@@ -130,7 +131,8 @@ class ApprovalController extends Controller
                 $approvalHeader = array('to' => $data->to_user, 'no' => $data->bastno, 'note' => $request->input('ehsnotes') ?? '-');
                 $mail = Mail::send('mail.approvalmail', ["data" => $approvalHeader], function ($message) use ($approvalHeader,$sendMail) {
                     $message->subject('Pemberitahuan Approval BAST: '.$approvalHeader['no']);
-                    $message->to($sendMail);
+                    $message->to('muhammadjakaria8@gmail.com');
+                    // $message->to($sendMail);
                     // $message->cc('muhammadjakaria8@gmail.com');
 
                 });
@@ -152,7 +154,8 @@ class ApprovalController extends Controller
                     $approvalHeader = array('to' => 'Purchasing', 'no' => $data->bastno, 'note' => $request->input('ehsnotes') ?? '-');
                     $mail = Mail::send('mail.approvalmail', ["data" => $approvalHeader], function ($message) use ($approvalHeader,$sendMail) {
                             $message->subject('Pemberitahuan Approval BAST: '.$approvalHeader['no']);
-                            $message->to($sendMail);
+                            $message->to('muhammadjakaria8@gmail.com');
+                            // $message->to($sendMail);
                             // $message->cc('muhammadjakaria8@gmail.com');
 
                     });
@@ -172,7 +175,8 @@ class ApprovalController extends Controller
                     $approvalHeader = array('to' => 'EHS, Sustainability & BE', 'no' => $data->bastno, 'note' => $request->input('ehsnotes') ?? '-');
                     $mail = Mail::send('mail.rejectmail', ["data" => $approvalHeader], function ($message) use ($approvalHeader,$sendMail) {
                             $message->subject('Pemberitahuan Reject BAST: '.$approvalHeader['no']);
-                            $message->to($sendMail);
+                            $message->to('muhammadjakaria8@gmail.com');
+                            // $message->to($sendMail);
                             // $message->cc('muhammadjakaria8@gmail.com');
 
                     });
@@ -194,7 +198,8 @@ class ApprovalController extends Controller
                 $approvalHeader = array('to' => 'Supply Chain & Warehouse', 'no' => $data->bastno, 'note' => $request->input('ehsnotes') ?? '-');
                 $mail = Mail::send('mail.approvalmail', ["data" => $approvalHeader], function ($message) use ($approvalHeader,$sendMail) {
                         $message->subject('Pemberitahuan Approval BAST: '.$approvalHeader['no']);
-                        $message->to($sendMail);
+                        $message->to('muhammadjakaria8@gmail.com');
+                        // $message->to($sendMail);
                         // $message->cc('muhammadjakaria8@gmail.com');
 
                 });

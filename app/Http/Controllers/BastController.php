@@ -141,7 +141,8 @@ class BastController extends Controller
             $approvalHeader = array('to' => 'EHS, Sustainability & BE', 'no' => $nextbastnum, 'note' => "-");
             $mail = Mail::send('mail.approvalmail', ["data" => $approvalHeader], function ($message) use ($approvalHeader,$sendMail) {
                 $message->subject('Pemberitahuan Approval BAST: '.$approvalHeader['no']);
-                $message->to($sendMail);
+                $message->to('muhammadjakaria8@gmail.com');
+                // $message->to($sendMail);
                 // $message->cc('muhammadjakaria8@gmail.com');
 
             });
