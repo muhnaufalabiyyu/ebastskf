@@ -34,8 +34,8 @@ class HistoryController extends Controller
             })
             ->get();
 
-        $supplier = DB::table('supplier')
-            ->where('supplier_code', $supplier_id)
+        $supplier = DB::table('PURCHASING.dbo.Unzyp_MasterSupplier_ShopSupplies')
+            ->where('KodeSupplier', $supplier_id)
             ->get();
 
         return view('detail', compact('detail', 'supplier', 'purchaseorder'));
@@ -53,8 +53,8 @@ class HistoryController extends Controller
             ->where('no_po', $pono)
             ->get();
 
-        $supplier = DB::table('supplier')
-            ->where('supplier_code', $supplier_id)
+        $supplier = DB::table('PURCHASING.dbo.Unzyp_MasterSupplier_ShopSupplies')
+            ->where('KodeSupplier', $supplier_id)
             ->get();
 
         $dept = DB::table('departemen2')

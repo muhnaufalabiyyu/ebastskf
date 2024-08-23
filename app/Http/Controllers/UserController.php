@@ -43,9 +43,9 @@ class UserController extends Controller
     public function supplieruser()
     {
         $users = DB::table('users')
-            ->select('users.*', 'supplier.supplier_name')
+            ->select('users.*', 'PURCHASING.dbo.Unzyp_MasterSupplier_ShopSupplies.NamaSupplier')
             ->where('users.acting', 1)
-            ->join('supplier', 'users.supplier_id', '=', 'supplier.supplier_code')
+            ->join('PURCHASING.dbo.Unzyp_MasterSupplier_ShopSupplies', 'users.supplier_id', '=', DB::raw("PURCHASING.dbo.Unzyp_MasterSupplier_ShopSupplies.KodeSupplier COLLATE SQL_Latin1_General_CP1_CI_AS"))
             ->orderBy('users.last_access', 'desc')
             ->get();
 
@@ -132,7 +132,7 @@ class UserController extends Controller
     // data needed for supplier user addition
     public function indexusersupplier()
     {
-        $suppliers = DB::table('supplier')->get();
+        $suppliers = DB::table('PURCHASING.dbo.Unzyp_MasterSupplier_ShopSupplies')->get();
 
         return view('administrator.addsupplieruser', compact('suppliers'));
     }
@@ -141,6 +141,7 @@ class UserController extends Controller
     public function addsupplieruser(Request $request)
     {
         try {
+            $signaturepath = null;
             $fullname = $request->input('fullname');
             $email = $request->input('email');
             $rawpassword = $request->input('password');
@@ -148,11 +149,13 @@ class UserController extends Controller
             $supplier = $request->input('supplier');
             $signature = $request->file('signature');
 
-            $signaturefilename = uniqid() . '_' . $signature->getClientOriginalName();
-            $signaturedestinationPath = 'storage/signature/user/';
-            $signaturepath = 'storage/signature/user/' . $signaturefilename;
-
-            Storage::disk('public')->putFileAs($signaturedestinationPath, $signature, $signaturefilename);
+            if($signature != null)
+            {
+                $signaturefilename = uniqid() . '_' . $signature->getClientOriginalName();
+                $signaturedestinationPath = 'storage/signature/user/';
+                $signaturepath = 'storage/signature/user/' . $signaturefilename;
+                Storage::disk('public')->putFileAs($signaturedestinationPath, $signature, $signaturefilename);
+            }
 
             DB::table('users')->insert(['email' => $email, 'name' => $fullname, 'password' => $password, 'supplier_id' => $supplier, 'acting' => '1', 'gol' => '0', 'signaturepath' => $signaturepath, 'created_at' => Carbon::now()]);
 

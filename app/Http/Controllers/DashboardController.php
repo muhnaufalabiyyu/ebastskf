@@ -15,7 +15,7 @@ class DashboardController extends Controller
             ->count();
 
         $bastcount = DB::table('bast')->count();
-        $spcount = DB::table('supplier')->count();
+        $spcount = DB::table('PURCHASING.dbo.Unzyp_MasterSupplier_ShopSupplies')->count();
 
         $activity = DB::table('activity')
             ->orderBy('time', 'desc')
@@ -24,11 +24,11 @@ class DashboardController extends Controller
 
         foreach ($activity as $act) {
             if ($act->activity == 'createbast') {
-                $supplier = DB::table('supplier')
-                    ->where('supplier_code', $act->name)
+                $supplier = DB::table('PURCHASING.dbo.Unzyp_MasterSupplier_ShopSupplies')
+                    ->where('KodeSupplier', $act->name)
                     ->first();
                 if ($supplier) {
-                    $act->supplier_name = $supplier->supplier_name;
+                    $act->supplier_name = $supplier->NamaSupplier;
                 } else {
                     $act->supplier_name = 'NO NAME SUPPLIER';
                 }

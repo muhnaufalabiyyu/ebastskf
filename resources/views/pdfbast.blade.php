@@ -116,13 +116,13 @@
                 <td style="width: 5px"></td>
                 <td style="width: 283px">&nbsp;&nbsp;Nama Perusahaan</td>
                 <td style="width: 1px">: </td>
-                <td style="width: 380px">{{ $sp->supplier_name }}</td>
+                <td style="width: 380px">{{ $sp->NamaSupplier }}</td>
             </tr>
             <tr>
                 <td style="width: 5px"></td>
                 <td style="width: 280px; vertical-align: top">&nbsp;&nbsp;Alamat</td>
                 <td style="width: 1px; vertical-align: top">: </td>
-                <td style="width: 380px">{{ $sp->address }}, {{ $sp->address_2 }}, {{ $sp->country }}</td>
+                <td style="width: 380px">{{ $sp->Alamat1 }}, {{ $sp->Alamat2 }}, {{ $sp->Negara }}</td>
             </tr>
             <tr>
                 <td style="width: 5px"></td>

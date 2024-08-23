@@ -35,7 +35,7 @@
                                     <td>{{ $user->name }}</td>
                                     <td>{{ $user->email }}</td>
                                     <td>{{ $user->supplier_id }}</td>
-                                    <td>{{ $user->supplier_name }}</td>
+                                    <td>{{ $user->NamaSupplier }}</td>
                                     @if (!empty($user->last_access))
                                         <td>{{ date('d-m-Y H:i:s', strtotime($user->last_access)) }}</td>
                                     @else
