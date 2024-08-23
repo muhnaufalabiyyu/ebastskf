@@ -16,7 +16,7 @@
 						<div style="padding-bottom: 30px; font-size: 17px;">
 							<strong>Dear Department : {{$data['to']}}</strong>
 						</div>
-						<div style="padding-bottom: 30px">Diinformasikan bahwa dokumen BAST Dengan No : <strong>{{$data['no']}}</strong>, Menunggu approval anda.
+						<div style="padding-bottom: 30px">Diinformasikan bahwa dokumen BAST Dengan No : <strong>{{$data['no']}}</strong>, diperlukan REVISI dan menunggu approval kembali.
 
 							Silahkan klik <a href="{{route('approval')}}">Link</a> <br><br>
 
