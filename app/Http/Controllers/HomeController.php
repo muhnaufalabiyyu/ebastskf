@@ -38,8 +38,8 @@ class HomeController extends Controller
             ->where('acting', 1)
             ->get();
 
-        $supplier = DB::table('supplier')
-            ->where('supplier_code', $supplier_code)
+        $supplier = DB::table('PURCHASING.dbo.Unzyp_MasterSupplier_ShopSupplies')
+            ->where('KodeSupplier', $supplier_code)
             ->get();
 
         return view('createbast', compact('supplier', 'dept'));

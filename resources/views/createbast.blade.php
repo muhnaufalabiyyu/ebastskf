@@ -17,13 +17,13 @@
                                 <tr>
                                     <td style="width: 120px">Nama Supplier</td>
                                     <td>:&nbsp;</td>
-                                    <td>{{ $sp->supplier_name }}
+                                    <td>{{ $sp->NamaSupplier }}
                                     </td>
                                 </tr>
                                 <tr>
                                     <td style="vertical-align: top">Alamat</td>
                                     <td style="vertical-align: top">:&nbsp;</td>
-                                    <td>{{ $sp->address }}, {{ $sp->address_2 }}, {{ $sp->city }}
+                                    <td>{{ $sp->Alamat1 }}, {{ $sp->Alamat2 }}, {{ $sp->Kota }}
                                     </td>
                                 </tr>
                                 <tr>
@@ -101,12 +101,12 @@
                                 <label for="startdate" class="col-sm-2 col-form-label">Tanggal Mulai<span
                                         style="color:red">*</span></label>
                                 <div class="col-sm-4">
-                                    <input type="date" class="form-control" id="startdate" name="startdate" required>
+                                    <input type="date" class="form-control" id="startdate" name="startdate" value="{{date('Y-m-d')}}" required>
                                 </div>
                                 <label for="enddate" class="col-sm-2 col-form-label">Tanggal Selesai<span
                                         style="color:red">*</span></label>
                                 <div class="col-sm-4">
-                                    <input type="date" class="form-control" id="enddate" name="enddate" required>
+                                    <input type="date" class="form-control" id="enddate" name="enddate" value="{{date('Y-m-d')}}" required>
                                 </div>
                             </div>
                             <div class="form-group row mt-3">

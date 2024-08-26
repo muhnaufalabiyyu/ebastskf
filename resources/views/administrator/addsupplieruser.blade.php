@@ -112,8 +112,8 @@
                         <select name="supplier" class="form-control" aria-label="supplier" id="supplier">
                             {{-- <option value="" selected disabled>Pilih Supplier</option> --}}
                             @foreach ($suppliers as $sp)
-                                <option value="{{ $sp->supplier_code }}">{{ $sp->supplier_code }} -
-                                    {{ $sp->supplier_name }}
+                                <option value="{{ $sp->KodeSupplier }}">{{ $sp->KodeSupplier }} -
+                                    {{ $sp->NamaSupplier }}
                                 </option>
                             @endforeach
                         </select>

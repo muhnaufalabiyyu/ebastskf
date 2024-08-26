@@ -9,7 +9,7 @@
             @foreach ($detail as $row)
                 @foreach ($supplier as $sp)
                     <h4>BAST Number : {{ $row->bastno }}<span style="float: right">
-                            @if ($sp->local == 'Y')
+                            @if ($sp->TipeLokal == '1')
                                 Local
                             @else
                                 Import
@@ -27,7 +27,7 @@
                                     </tr>
                                     <tr>
                                         {{-- <td></td> --}}
-                                        <td colspan="2">{{ $sp->supplier_name }}</td>
+                                        <td colspan="2">{{ $sp->NamaSupplier }}</td>
                                     </tr>
                 @endforeach
                 <tr>

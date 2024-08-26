@@ -25,8 +25,8 @@ class PdfController extends Controller
             $dept = $bast->pluck('to_user');
             $spname = $bast->pluck('createdby');
 
-            $supplier = DB::table('supplier')
-                ->where('supplier_code', $spid)
+            $supplier = DB::table('PURCHASING.dbo.Unzyp_MasterSupplier_ShopSupplies')
+                ->where('KodeSupplier', $spid)
                 ->get();
 
             $userdata = DB::table('users')
