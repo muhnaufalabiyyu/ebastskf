@@ -13,10 +13,10 @@
 						</div>
 						<div style="padding-bottom: 30px">Diinformasikan bahwa BAST Dengan No : <strong> {{$data['no']}} </strong> Telah selesai melalui proses approval.<br><br>
 
-							Note : <br>{{$data['note']}}<br>
+							Note : {{$data['note']}}<br>
 
 							Demikian yang dapat kami sampaikan, terima kasih atas perhatiannya.</div>
-						<div style="padding-bottom: 10px">Terimaksih
+						<div style="padding-bottom: 10px">
                             <br>
                             <br>
                             <br>
