@@ -106,7 +106,7 @@ class ApprovalController extends Controller
                 });
 
                 //send email to supplier
-                $supp = DB::table('supplier')->where('supplier_code',$data->supplier_id)->first();
+                $supp = DB::table('PURCHASING.dbo.Unzyp_MasterSupplier_ShopSupplies')->where('KodeSupplier',$data->supplier_id)->first();
                 $headerMail = array('to' => $supp->supplier_name, 'no' => $data->bastno, 'note' => "-");
                 $mail = Mail::send('mail.suppliermail', ["data" => $headerMail], function ($message) use ($supp) {
                     $message->subject('Pemberitahuan approval BAST telah selesai');
