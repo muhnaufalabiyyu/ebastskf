@@ -107,13 +107,32 @@ class ApprovalController extends Controller
 
                 //send email to supplier
                 $supp = DB::table('PURCHASING.dbo.Unzyp_MasterSupplier_ShopSupplies')->where('KodeSupplier',$data->supplier_id)->first();
-                $headerMail = array('to' => $supp->supplier_name, 'no' => $data->bastno, 'note' => "-");
-                $mail = Mail::send('mail.suppliermail', ["data" => $headerMail], function ($message) use ($supp) {
-                    $message->subject('Pemberitahuan approval BAST telah selesai');
-                    $message->to($supp->email);
-                    // $message->cc('muhammadjakaria8@gmail.com');
+                $validMail = $supp->Email;
 
-                });
+                //chek email tidak kosong
+                if (!empty($validMail)) {
+
+                    //seleksi email dengan titik koma, dan koma
+                    $emails = preg_split('/\s*[,;]\s*/', $validMail);
+                    $emails = array_map('trim', $emails);
+
+                    //check validitas email
+                    foreach ($emails as $email) {
+                        if (filter_var(trim($email), FILTER_VALIDATE_EMAIL)) {
+                            $validEmails[] = trim($email);
+                        }
+                    }
+
+                    if(!empty($validEmails)){
+                        $headerMail = array('to' => $supp->NamaSupplier, 'no' => $data->bastno, 'note' => "-");
+                        $mail = Mail::send('mail.suppliermail', ["data" => $headerMail], function ($message) use ($validEmails) {
+                            $message->subject('Pemberitahuan approval BAST telah selesai');
+                            $message->to($validEmails);
+                            // $message->cc('muhammadjakaria8@gmail.com');
+
+                        });
+                    }
+                }
 
             } elseif ($user->dept == 'EHS') {
                 DB::transaction(function () use ($id, $field, $field2, $status, $notes, $userappv, $usrappv, $rate) {
