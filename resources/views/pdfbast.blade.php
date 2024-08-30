@@ -283,7 +283,7 @@
         </tr>
         <tr>
             <td class="ttd"></td>
-            @if ($data->status == 4)
+            @if ($data->status >= 4)
                 <td class="ttd"><img src="{{ public_path('storage/signature/PURCH.jpg') }}" alt="TTD Abiyyu"
                         width="100px"></td>
             @else
