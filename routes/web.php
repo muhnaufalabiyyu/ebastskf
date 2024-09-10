@@ -66,4 +66,10 @@ Route::group(['middleware' => ['cekActing', 'auth']], function () {
     // Route Data BAST
     Route::get('bastdata', 'AdminController@indexbast')->name('bastdata');
     Route::post('deletebast/{id}', 'AdminController@deletebast')->name('deletebast');
+    // Route Data Department
+    Route::get('deptdata', 'AdminController@indexdept')->name('deptdata');
+    Route::post('adddept', 'AdminController@adddept')->name('adddept');
+    Route::post('editdept/{id}', 'AdminController@editdept')->name('editdept');
+    Route::post('deletedept/{id}', 'AdminController@deletedept')->name('deletedept');
+    Route::get('/get-user-email/{name}', 'AdminController@getemail')->name('getemail');
 });

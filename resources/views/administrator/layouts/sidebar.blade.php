@@ -38,5 +38,13 @@
                 <span>BAST Data</span>
             </a>
         </li>
+
+        <li class="nav-item">
+            <a class="nav-link {{ request()->routeIs('deptdata') ? 'nav-link' : 'nav-link collapsed' }}"
+                href="{{ route('deptdata') }}">
+                <i class="bi bi-building"></i>
+                <span>Department Data</span>
+            </a>
+        </li>
     </ul>
 </aside><!-- End Sidebar-->
