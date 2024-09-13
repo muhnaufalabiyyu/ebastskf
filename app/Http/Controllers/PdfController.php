@@ -12,7 +12,7 @@ class PdfController extends Controller
 {
     public function generatePDF($id, $supplier_id, $action)
     {
-        // try {
+        try {
             $user = Auth::user();
             $bast = DB::table('bast')
                 ->select("*", DB::raw("FORMAT(bastdt, 'dd-MM-yyyy') as bast_dt"), DB::raw("FORMAT(workstart, 'dd-MM-yyyy') as work_start"), DB::raw("FORMAT(workend, 'dd-MM-yyyy') as work_end"), DB::raw("FORMAT(userappvdt, 'dd-MM-yyyy HH:mm:ss') as userappv_dt"), DB::raw("FORMAT(ehsappvdt, 'dd-MM-yyyy HH:mm:ss') as ehsappv_dt"), DB::raw("FORMAT(purchappvdt, 'dd-MM-yyyy HH:mm:ss') as purchappv_dt"), DB::raw("FORMAT(rrdt, 'dd-MM-yyyy HH:mm:ss') as rr_dt"), DB::raw("FORMAT(created_at, 'dd-MM-yyyy HH:mm:ss') as createdat"))
@@ -56,9 +56,9 @@ class PdfController extends Controller
             } elseif ($action == 'download') {
                 return $pdf->download($bastno . '.pdf');
             }
-        // } catch (Exception $e) {
-        //     dd($e->getMessage());
-        //     Session::flash('error', $e->getMessage());
-        // }
+        } catch (Exception $e) {
+            return $e->getMessage();
+            Session::flash('error', $e->getMessage());
+        }
     }
 }
