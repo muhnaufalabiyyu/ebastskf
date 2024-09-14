@@ -19,9 +19,8 @@ class AdminController extends Controller
     public function indexdept()
     {
         $deptdata = DB::table('departemen2')->get();
-        $mgrdata = DB::table('users')->where('gol', '!=', '999')->get();
-
-        $spvdata = DB::table('users')->where('gol', '!=', '999')->get();
+        $mgrdata = DB::table('users')->where('gol', '!=', '999')->where('gol', '!=', '0')->get();
+        $spvdata = DB::table('users')->where('gol', '!=', '999')->where('gol', '!=', '0')->get();
 
         return view('administrator.departemen', compact('deptdata', 'mgrdata', 'spvdata'));
     }
