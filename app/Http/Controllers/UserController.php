@@ -15,28 +15,26 @@ class UserController extends Controller
     // show data skf user
     public function skfuser()
     {
-        $users = DB::table('users')
-            ->select('users.*', 'departemen2.nama_dept')
-            ->where('users.acting', 2)
-            ->orWhere('users.acting', 3)
-            ->join('departemen2', 'users.dept', '=', 'departemen2.alias')
-            ->orderBy('users.last_access', 'desc')
-            ->get();
+        $users = DB::table('users')->where('level', '!=', 0)->get();
 
         foreach ($users as $user) {
-            $acting = $user->acting;
-            if ($acting == 3) {
-                $jabatan = 'Supervisor';
-            } elseif ($acting == 2) {
+            $level = $user->level;
+            if ($level == 1) {
                 $jabatan = 'Manager';
+            } elseif ($level == 2) {
+                $jabatan = 'Supervisor';
+            } elseif ($level == 3) {
+                $jabatan = 'Staff';
             } else {
-                // other condition for role here
+                $jabatan = 'Undefined';
             }
 
             $user->jabatan = $jabatan;
         }
 
-        return view('administrator.skfuser', compact('users'));
+        $depts = DB::table('departemen2')->get();
+
+        return view('administrator.skfuser', compact('users', 'depts'));
     }
 
     // show data supplier user
@@ -69,26 +67,55 @@ class UserController extends Controller
             $rawpassword = $request->input('password');
             $password = Hash::make($rawpassword);
             $dept = $request->input('departemen');
-            $jabatan = $request->input('jabatan');
+            $level = $request->input('level');
+            $signature = $request->file('signature');
 
-            if (($jabatan == 'mgr' && $dept == 'PURCH') || $dept == 'EHS') {
+            if($signature != null)
+            {
+                $signaturefilename = uniqid() . '_' . $signature->getClientOriginalName();
+                $signaturedestinationPath = 'storage/signature/';
+                $signaturepath = 'storage/signature/' . $signaturefilename;
+                Storage::disk('public')->putFileAs($signaturedestinationPath, $signature, $signaturefilename);
+            }
+
+            if (($level == '1' && $dept == 'PURCH') || $dept == 'EHS') {
                 $acting = 2;
                 $gol = 3;
-            } elseif (($jabatan == 'spv' && $dept == 'PURCH') || $dept == 'EHS') {
+            } elseif (($level == '2' && $dept == 'PURCH') || $dept == 'EHS') {
                 $acting = 3;
                 $gol = 3;
-            } elseif ($jabatan == 'spv') {
+            } elseif ($level == '2') {
                 $acting = 2;
                 $gol = 3;
-            } elseif ($jabatan == 'mgr') {
+            } elseif ($level == '1') {
                 $acting = 2;
                 $gol = 4;
+            } elseif ($level == '3') {
+                $acting = 2;
+                $gol = 2;
             } else {
+                $acting = 2;
+                $gol = 2;
                 // other condition here
             }
 
-            DB::table('users')->insert(['email' => $email, 'name' => $fullname, 'password' => $password, 'dept' => $dept, 'acting' => $acting, 'gol' => $gol, 'created_at' => Carbon::now()]);
+            DB::beginTransaction();
 
+            $queryadduser = DB::table('users')->insert(['email' => $email, 'name' => $fullname, 'password' => $password, 'dept' => $dept, 'acting' => $acting, 'gol' => $gol, 'level' => $level, 'signaturepath' => $signaturepath, 'created_at' => Carbon::now()]);
+
+            if ($queryadduser) {
+                if ($level == 1) {
+                    DB::table('departemen2')
+                        ->where('alias', $dept)
+                        ->update(['manager1' => $fullname, 'emailmgr1' => $email]);
+                } elseif ($level == 2) {
+                    DB::table('departemen2')
+                        ->where('alias', $dept)
+                        ->update(['spv1' => $fullname, 'emailspv1' => $email]);
+                }
+            }
+
+            DB::commit();
             toastr()->success('User berhasil dibuat!');
             return redirect()->route('userskf');
         } catch (Exception $e) {
@@ -113,17 +140,40 @@ class UserController extends Controller
         $name = $request->input('newfullname');
         $email = $request->input('newmail');
         $rawpassword = $request->input('newpassword');
+        $newdept = $request->input('newdept');
+        $newjabatan = $request->input('newjabatan');
+        if ($newdept == 'PURCH' || $newdept == 'EHS' || $newdept == 'SCWH') {
+            $gol = 3;
+        } else {
+            $gol = 4;
+        }
 
+        DB::beginTransaction();
+        
         if (empty($rawpassword)) {
-            DB::table('users')
+            $queryeditusr = DB::table('users')
                 ->where('id', $id)
-                ->update(['name' => $name, 'email' => $email, 'last_update' => Carbon::now()]);
+                ->update(['name' => $name, 'email' => $email, 'dept' => $newdept, 'level' => $newjabatan, 'gol' => $gol, 'last_update' => Carbon::now()]);
         } else {
             $password = Hash::make($rawpassword);
-            DB::table('users')
+            $queryeditusr = DB::table('users')
                 ->where('id', $id)
-                ->update(['name' => $name, 'email' => $email, 'password' => $password, 'last_update' => Carbon::now()]);
+                ->update(['name' => $name, 'email' => $email, 'dept' => $newdept, 'level' => $newjabatan, 'gol' => $gol, 'password' => $password, 'last_update' => Carbon::now()]);
         }
+
+        if ($queryeditusr) {
+            if ($newjabatan == 1) {
+                DB::table('departemen2')
+                    ->where('alias', $newdept)
+                    ->update(['manager1' => $name, 'emailmgr1' => $email]);
+            } elseif ($newjabatan == 2) {
+                DB::table('departemen2')
+                    ->where('alias', $newdept)
+                    ->update(['spv1' => $name, 'emailspv1' => $email]);
+            }
+        }
+
+        DB::commit();
 
         toastr()->success('Data user berhasil diubah!');
         return redirect()->route('userskf');

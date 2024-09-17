@@ -71,5 +71,4 @@ Route::group(['middleware' => ['cekActing', 'auth']], function () {
     Route::post('adddept', 'AdminController@adddept')->name('adddept');
     Route::post('editdept/{id}', 'AdminController@editdept')->name('editdept');
     Route::post('deletedept/{id}', 'AdminController@deletedept')->name('deletedept');
-    Route::get('/get-user-email/{name}', 'AdminController@getemail')->name('getemail');
 });

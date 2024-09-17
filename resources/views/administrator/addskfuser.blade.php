@@ -93,9 +93,8 @@
         <div class="card py-2">
             <div class="card-body">
                 <h5 class="card-title">Please fill in the form with the correct information.</h5>
-
                 <!-- Floating Labels Form -->
-                <form class="row g-3" action="{{ route('storeskfuser') }}" method="post">
+                <form class="row g-3" action="{{ route('storeskfuser') }}" method="post" enctype="multipart/form-data">
                     @csrf
                     <div class="col-md-12">
                         <div class="form-floating">
@@ -124,10 +123,12 @@
                     </div>
                     <div class="col-md-4">
                         <div class="form-floating mb-3">
-                            <select name="jabatan" class="form-select" aria-label="jabatan" id="jabatan">
+                            <select name="level" class="form-select" aria-label="jabatan" id="jabatan">
                                 <option value="" selected disabled>Pilih Jabatan</option>
-                                <option value="spv">Supervisor</option>
-                                <option value="mgr">Manager</option>
+                                <option value="1">Manager</option>
+                                <option value="2">Supervisor</option>
+                                <option value="3">Staff</option>
+                            </select>
                             </select>
                             <label for="jabatan">Jabatan</label>
                         </div>
@@ -157,6 +158,11 @@
                     <div class="input-group mb-4 row">
                         <div id="passwordInfo" class="col-6"></div>
                         <div id="passwordguide" class="col-6"></div>
+                    </div>
+                    <div class="col-md-6">
+                        <label for="signature" class="form-label">Upload tanda tangan (format file harus .jpg atau .jpeg!)</label>
+                        <input name="signature" type="file" class="form-control onlyjpeg" id="file" placeholder="Signature"
+                            accept="image/jpeg">
                     </div>
                     <div class="text-center">
                         <button type="submit" id="addbutton" class="btn btn-primary">Submit</button>

@@ -19,10 +19,8 @@ class AdminController extends Controller
     public function indexdept()
     {
         $deptdata = DB::table('departemen2')->get();
-        $mgrdata = DB::table('users')->where('gol', '!=', '999')->where('gol', '!=', '0')->get();
-        $spvdata = DB::table('users')->where('gol', '!=', '999')->where('gol', '!=', '0')->get();
 
-        return view('administrator.departemen', compact('deptdata', 'mgrdata', 'spvdata'));
+        return view('administrator.departemen', compact('deptdata'));
     }
 
     public function deletebast(Request $request, $id)
@@ -43,6 +41,23 @@ class AdminController extends Controller
         return redirect()->route('bastdata');
     }
 
+    public function adddept(Request $request)
+    {
+        try {
+            DB::table('departemen2')->insert([
+                'nama_dept' => $request->input('deptname'),
+                'alias' => $request->input('alias'),
+                'acting' => '1',
+            ]);
+
+            return redirect()->route('deptdata')->with('success', 'Departemen baru berhasil ditambahkan.');
+        } catch (Exception $e) {
+            return redirect()
+                ->back()
+                ->with('error', 'Terjadi kesalahan saat menambahkan data: ' . $e->getMessage());
+        }
+    }
+
     public function deletedept($id)
     {
         try {
@@ -55,30 +70,6 @@ class AdminController extends Controller
         return redirect()->route('deptdata');
     }
 
-    public function adddept(Request $request)
-    {
-        try {
-            DB::table('departemen2')->insert([
-                'nama_dept' => $request->input('deptname'),
-                'alias' => $request->input('alias'),
-                'manager1' => $request->input('newmgr1'),
-                'emailmgr1' => $request->input('emailmgr1'),
-                'manager2' => $request->input('newmgr2'),
-                'emailmgr2' => $request->input('emailmgr2'),
-                'spv1' => $request->input('newspv1'),
-                'emailspv1' => $request->input('emailspv1'),
-                'spv2' => $request->input('newspv2'),
-                'emailspv2' => $request->input('emailspv2'),
-            ]);
-
-            return redirect()->route('deptdata')->with('success', 'Departemen baru berhasil ditambahkan.');
-        } catch (Exception $e) {
-            return redirect()
-                ->back()
-                ->with('error', 'Terjadi kesalahan saat menambahkan data: ' . $e->getMessage());
-        }
-    }
-
     public function editdept(Request $request, $id)
     {
         try {
@@ -87,14 +78,6 @@ class AdminController extends Controller
                 ->update([
                     'nama_dept' => $request->input('newdeptname'),
                     'alias' => $request->input('newalias'),
-                    'manager1' => $request->input('mgr1'),
-                    'emailmgr1' => $request->input('newemailmgr1'),
-                    'manager2' => $request->input('mgr2'),
-                    'emailmgr2' => $request->input('newemailmgr2'),
-                    'spv1' => $request->input('spv1'),
-                    'emailspv1' => $request->input('newemailspv1'),
-                    'spv2' => $request->input('spv2'),
-                    'emailspv2' => $request->input('newemailspv2'),
                 ]);
 
             return redirect()->route('deptdata')->with('success', 'Data departemen berhasil diupdate.');
@@ -102,17 +85,6 @@ class AdminController extends Controller
             return redirect()
                 ->back()
                 ->with('error', 'Terjadi kesalahan saat mengupdate data: ' . $e->getMessage());
-        }
-    }
-
-    public function getemail($name)
-    {
-        $users = DB::table('users')->where('name', $name)->first();
-
-        if ($users) {
-            return response()->json(['email' => $users->email]);
-        } else {
-            return response()->json(['email' => '']);
         }
     }
 }

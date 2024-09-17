@@ -33,7 +33,6 @@
                                 <td>{{ $loop->iteration }}.</td>
                                 <td>{{ $user->name }}</td>
                                 <td>{{ $user->email }}</td>
-                                <td>{{ $user->nama_dept }}</td>
                                 <td>{{ $user->jabatan }}</td>
                                 @if (!empty($user->last_access))
                                     <td>{{ date('d-m-Y H:i:s', strtotime($user->last_access)) }}</td>
@@ -109,6 +108,26 @@
                                                     <input type="email" class="form-control" id="email" name="newmail"
                                                         value="{{ $user->email }}" autocomplete="off">
                                                 </div>
+                                                <div class="col-md-6">
+                                                    <label for="dept" class="form-label">Departemen</label>
+                                                    <select name="newdept" id="dept" class="form-control">
+                                                        @foreach ($depts as $dept)
+                                                            <option value="{{ $dept->alias }}"
+                                                                {{ $user->dept == $dept->alias ? 'selected' : '' }}>
+                                                                {{ $dept->nama_dept }}
+                                                            </option>
+                                                        @endforeach
+                                                    </select>
+                                                </div>
+                                                <div class="col-md-6">
+                                                    <label for="newjabatan" class="form-label">Jabatan</label>
+                                                    <select name="newjabatan" id="newjabatan" class="form-control">
+                                                        <option value="1" {{ $user->level == '1' ? 'selected' : '' }}>Manager</option>
+                                                        <option value="2" {{ $user->level == '2' ? 'selected' : '' }}>Supervisor</option>
+                                                        <option value="3" {{ $user->level == '3' ? 'selected' : '' }}>Staff</option>
+                                                    </select>                                                    
+                                                </div>
+                                                <input type="hidden" name="gol" value="{{ $user->gol }}">
                                                 <div class="col-md-6">
                                                     <label for="password" class="form-label">New Password<br><span
                                                             style="font-size: 12px"><i>Don't fill this if don't want to

@@ -38,10 +38,16 @@
                                 {{-- <td></td> --}}
                                 <td>
                                     @if (Auth::user()->dept == 'EHS')
-                                        <button class="btn btn-success btn-sm" id="btnEHSModal{{ $row->id_bast }}">
-                                            <i class="fa fa-check"></i>
-                                        </button>
-                                    @elseif (Auth::user()->gol == 4 && Auth::user()->acting == 2)
+                                        @if ($row->status == 1)
+                                            <button class="btn btn-success btn-sm" id="btnEHSModal{{ $row->id_bast }}">
+                                                <i class="fa fa-check"></i>
+                                            </button>
+                                        @else
+                                            <button class="btn btn-success btn-sm" id="btnUserModal{{ $row->id_bast }}">
+                                                <i class="fa fa-check"></i>
+                                            </button>
+                                        @endif
+                                    @elseif (Auth::user()->gol == 4 || (Auth::user()->gol == 3 && Auth::user()->acting == 2))
                                         <button class="btn btn-success btn-sm" id="btnUserModal{{ $row->id_bast }}">
                                             <i class="fa fa-check"></i>
                                         </button>
@@ -51,64 +57,70 @@
                                             <i class="fa fa-check"></i>
                                         </button>
                                     @elseif (Auth::user()->dept == 'SCWH')
-                                        <button type="button" class="btn btn-success btn-sm"
-                                            id="btnWh{{ $row->id_bast }}"><i class="fa fa-check"></i></button>
-                                        <script>
-                                            var btnWh = document.getElementById('btnWh' + {{ $row->id_bast }});
+                                        @if ($row->status == 4)
+                                            <button type="button" class="btn btn-success btn-sm"
+                                                id="btnWh{{ $row->id_bast }}"><i class="fa fa-check"></i></button>
+                                            <script>
+                                                var btnWh = document.getElementById('btnWh' + {{ $row->id_bast }});
 
-                                            btnWh.addEventListener('click', function() {
-                                                Swal.fire({
-                                                    title: 'Alert!',
-                                                    showCancelButton: true,
-                                                    confirmButtonText: 'Approve',
-                                                    confirmButtonAriaLabel: 'Save',
-                                                    cancelButtonAriaLabel: 'Cancel',
-                                                    input: 'text',
-                                                    inputLabel: 'Mohon masukkan nomor RR yang sudah dilakukan pada SIIS',
-                                                    inputPlaceholder: 'Input disini ...',
-                                                    inputAttributes: {
-                                                        name: 'remark',
-                                                    },
-                                                    icon: 'info'
-                                                }).then((result) => {
-                                                    if (result.isConfirmed) {
-                                                        const rrnumber = Swal.getInput().value;
-                                                        if (!rrnumber) {
-                                                            Swal.fire({
-                                                                icon: 'error',
-                                                                title: 'Oops...',
-                                                                text: 'Mohon masukkan Nomor RR yang sudah dilakukan pada SIIS',
-                                                            });
-                                                        } else {
-                                                            var csrfToken = $('meta[name="csrf-token"]').attr('content');
-                                                            $.ajax({
-                                                                type: "POST",
-                                                                url: "{{ route('approve', ['id' => $row->id_bast, 'userappv' => Auth::user()->name]) }}",
-                                                                data: {
-                                                                    _token: csrfToken,
-                                                                    rrno: rrnumber,
-                                                                },
-                                                                success: function(response) {
-                                                                    Swal.fire({
-                                                                        title: "SUCCESS!",
-                                                                        text: "Nomor RR berhasil diinput!.",
-                                                                        icon: "success"
-                                                                    }).then((result2) => {
-                                                                        if (result2.isConfirmed) {
-                                                                            location.reload();
-                                                                        }
-                                                                    })
-                                                                },
-                                                                error: function(xhr, status, error) {
-                                                                    console.error(xhr.responseText);
-                                                                }
-                                                            });
+                                                btnWh.addEventListener('click', function() {
+                                                    Swal.fire({
+                                                        title: 'Alert!',
+                                                        showCancelButton: true,
+                                                        confirmButtonText: 'Approve',
+                                                        confirmButtonAriaLabel: 'Save',
+                                                        cancelButtonAriaLabel: 'Cancel',
+                                                        input: 'text',
+                                                        inputLabel: 'Mohon masukkan nomor RR yang sudah dilakukan pada SIIS',
+                                                        inputPlaceholder: 'Input disini ...',
+                                                        inputAttributes: {
+                                                            name: 'remark',
+                                                        },
+                                                        icon: 'info'
+                                                    }).then((result) => {
+                                                        if (result.isConfirmed) {
+                                                            const rrnumber = Swal.getInput().value;
+                                                            if (!rrnumber) {
+                                                                Swal.fire({
+                                                                    icon: 'error',
+                                                                    title: 'Oops...',
+                                                                    text: 'Mohon masukkan Nomor RR yang sudah dilakukan pada SIIS',
+                                                                });
+                                                            } else {
+                                                                var csrfToken = $('meta[name="csrf-token"]').attr('content');
+                                                                $.ajax({
+                                                                    type: "POST",
+                                                                    url: "{{ route('approve', ['id' => $row->id_bast, 'userappv' => Auth::user()->name, 'currstatus' => $row->status]) }}",
+                                                                    data: {
+                                                                        _token: csrfToken,
+                                                                        rrno: rrnumber,
+                                                                    },
+                                                                    success: function(response) {
+                                                                        Swal.fire({
+                                                                            title: "SUCCESS!",
+                                                                            text: "Nomor RR berhasil diinput!.",
+                                                                            icon: "success"
+                                                                        }).then((result2) => {
+                                                                            if (result2.isConfirmed) {
+                                                                                location.reload();
+                                                                            }
+                                                                        })
+                                                                    },
+                                                                    error: function(xhr, status, error) {
+                                                                        console.error(xhr.responseText);
+                                                                    }
+                                                                });
+                                                            }
                                                         }
-                                                    }
 
+                                                    });
                                                 });
-                                            });
-                                        </script>
+                                            </script>
+                                        @elseif ($row->status == 2)
+                                            <button class="btn btn-success btn-sm" id="btnUserModal{{ $row->id_bast }}">
+                                                <i class="fa fa-check"></i>
+                                            </button>
+                                        @endif
                                     @endif
                                     <a href="{{ route('detail', ['id' => $row->id_bast, 'supplier_id' => $row->supplier_id]) }}"
                                         class="btn btn-primary btn-sm view-button">
@@ -170,6 +182,7 @@
                                                         name="rateid{{ $row->id_bast }}" value="1" required />
                                                     <label for="star1_{{ $row->id_bast }}" title="1 Star">1 star</label>
                                                 </div>
+                                                <input type="hidden" name="currstatus" value="{{ $row->status }}">
                                                 <div class="form-group">
                                                     <label for="userRemark" class="form-label mt-2">Remark</label>
                                                     <textarea name="userRemark" id="userRemark" cols="30" rows="5" class="form-control mt-2"></textarea>
@@ -231,7 +244,7 @@
                                                         name="rateehs{{ $row->id_bast }}" value="1" required />
                                                     <label for="star11_{{ $row->id_bast }}" title="1 Star">1 star</label>
                                                 </div>
-
+                                                <input type="hidden" name="currstatus" value="{{ $row->status }}">
                                                 <div class="form-group">
                                                     <label for="userRemark" class="form-label">Remark</label>
                                                     <textarea name="ehsnotes" id="ehsnotes" cols="30" rows="5" class="form-control"></textarea>

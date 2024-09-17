@@ -228,7 +228,7 @@
             <td>&nbsp;&nbsp;Checklist / Service Report / Foto (before dan after)</td>
         </tr>
         <tr>
-            <td class="checklist">&nbsp;&nbsp; <!--{{ empty($data->copypofile) ? 'x' : 'V' }} --> </td>
+            <td class="checklist">&nbsp;&nbsp;{{ empty($data->ehsappv) ? 'x' : 'V' }} </td>
             <td>&nbsp;&nbsp;Safety Evaluation from EHS</td>
         </tr>
         <tr>
@@ -264,9 +264,8 @@
         <tr>
             <td class="ttd"><img src="{{ public_path($signature) }}" alt="TTD Supplier" width="100px"></td>
             <td class="ttd"></td>
-            @if ($data->status >= 3)
-                <td class="ttd"><img src="{{ public_path('storage/signature/' . $data->to_user . '.jpg') }}"
-                        alt="TTD User" width="100px"></td>
+            @if ($data->status > 2)
+                <td class="ttd"><img src="{{ public_path($signatureuser) }}" alt="TTD User" width="100px"></td>
             @else
                 <td></td>
             @endif
@@ -284,7 +283,7 @@
         <tr>
             <td class="ttd"></td>
             @if ($data->status >= 4)
-                <td class="ttd"><img src="{{ public_path('storage/signature/PURCH.jpg') }}" alt="TTD Abiyyu"
+                <td class="ttd"><img src="{{ public_path($signaturepurch) }}" alt="TTD Purchasing"
                         width="100px"></td>
             @else
                 <td></td>
