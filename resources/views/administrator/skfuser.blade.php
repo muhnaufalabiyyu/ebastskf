@@ -33,6 +33,7 @@
                                 <td>{{ $loop->iteration }}.</td>
                                 <td>{{ $user->name }}</td>
                                 <td>{{ $user->email }}</td>
+                                <td>{{ $user->dept }}</td>
                                 <td>{{ $user->jabatan }}</td>
                                 @if (!empty($user->last_access))
                                     <td>{{ date('d-m-Y H:i:s', strtotime($user->last_access)) }}</td>

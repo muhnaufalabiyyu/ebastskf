@@ -40,7 +40,7 @@ class PdfController extends Controller
                 $pdf = app('dompdf.wrapper')->loadView('pdfbast', compact('bast', 'supplier', 'userdata', 'signature', 'signatureuser', 'signaturepurch'));
             } elseif ($user->acting == 1) {
                 if ($user->supplier_id == $supplier_id) {
-                    $pdf = app('dompdf.wrapper')->loadView('pdfbast', compact('bast', 'supplier', 'userdata', 'signature' 'signatureuser', 'signaturepurch'));
+                    $pdf = app('dompdf.wrapper')->loadView('pdfbast', compact('bast', 'supplier', 'userdata', 'signature', 'signatureuser', 'signaturepurch'));
                 } else {
                     return redirect()->route('history');
                 }
