@@ -47,10 +47,6 @@
                                                 <i class="fa fa-check"></i>
                                             </button>
                                         @endif
-                                    @elseif (Auth::user()->gol == 4 || (Auth::user()->gol == 3 && Auth::user()->acting == 2))
-                                        <button class="btn btn-success btn-sm" id="btnUserModal{{ $row->id_bast }}">
-                                            <i class="fa fa-check"></i>
-                                        </button>
                                     @elseif (Auth::user()->dept == 'PURCH')
                                         <button class="btn btn-success btn-sm approve-button"
                                             data-route="{{ route('approve', ['id' => $row->id_bast, 'userappv' => Auth::user()->name]) }}">
@@ -90,10 +86,11 @@
                                                                 var csrfToken = $('meta[name="csrf-token"]').attr('content');
                                                                 $.ajax({
                                                                     type: "POST",
-                                                                    url: "{{ route('approve', ['id' => $row->id_bast, 'userappv' => Auth::user()->name, 'currstatus' => $row->status]) }}",
+                                                                    url: "{{ route('approve', ['id' => $row->id_bast, 'userappv' => Auth::user()->name]) }}",
                                                                     data: {
                                                                         _token: csrfToken,
                                                                         rrno: rrnumber,
+                                                                        currstatus: currstatus,
                                                                     },
                                                                     success: function(response) {
                                                                         Swal.fire({
@@ -117,6 +114,12 @@
                                                 });
                                             </script>
                                         @elseif ($row->status == 2)
+                                            <button class="btn btn-success btn-sm" id="btnUserModal{{ $row->id_bast }}">
+                                                <i class="fa fa-check"></i>
+                                            </button>
+                                        @endif
+                                    @else
+                                        @if (Auth::user()->gol == 4 || (Auth::user()->gol == 3 && Auth::user()->acting == 2))
                                             <button class="btn btn-success btn-sm" id="btnUserModal{{ $row->id_bast }}">
                                                 <i class="fa fa-check"></i>
                                             </button>
