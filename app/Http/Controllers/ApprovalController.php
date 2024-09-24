@@ -309,76 +309,78 @@ class ApprovalController extends Controller
                         });
                     }
                 }
-            } elseif ($user->gol == 4 || ($user->gol == 3 && $user->acting == 2)) {
-                // Untuk User
-                if ($actappv == '1') {
-                    DB::transaction(function () use ($id, $field, $field2, $field3, $status, $rate, $notes, $userappv, $usrappv) {
+            } else {
+                if ($user->gol == 4 || ($user->gol == 3 && $user->acting == 2)) {
+                    // Untuk User
+                    if ($actappv == '1') {
+                        DB::transaction(function () use ($id, $field, $field2, $field3, $status, $rate, $notes, $userappv, $usrappv) {
+                            DB::table('bast')
+                                ->where('id_bast', $id)
+                                ->update(['status' => $status, $usrappv => $userappv, $field => Carbon::now(), $field2 => $rate, $field3 => $notes, 'updated_at' => Carbon::now()]);
+                        });
+
+                        //send email to user APPROVAL PURCH OUTSTANDING
+                        $sendMail = DB::table('departemen2')
+                            ->select('emailmgr1', 'emailspv1')
+                            ->where('alias', 'PURCH')
+                            ->get()
+                            ->flatMap(function ($item) {
+                                return [$item->emailmgr1, $item->emailspv1];
+                            })
+                            ->toArray();
+                        $approvalHeader = ['to' => 'Purchasing', 'no' => $data->bastno, 'note' => $request->input('userRemark') ?? '-'];
+                        $mail = Mail::send('mail.approvalmail', ['data' => $approvalHeader], function ($message) use ($approvalHeader, $sendMail) {
+                            $message->subject('Pemberitahuan Approval BAST: ' . $approvalHeader['no']);
+                            $message->to($sendMail);
+                            // $message->cc('muhammadjakaria8@gmail.com');
+                        });
+                    } else {
+                        DB::transaction(function () use ($id, $field, $field2, $field3, $rate, $notes, $userappv, $usrappv) {
+                            DB::table('bast')
+                                ->where('id_bast', $id)
+                                ->update([$usrappv => $userappv, $field => Carbon::now(), $field2 => $rate, $field3 => $notes, 'updated_at' => Carbon::now()]);
+                        });
+
+                        //send email to user REJECT EHS OUTSTANDING
+                        $sendMail = DB::table('departemen2')
+                            ->select('emailmgr1', 'emailspv1')
+                            ->where('alias', 'EHS')
+                            ->get()
+                            ->flatMap(function ($item) {
+                                return [$item->emailmgr1, $item->emailspv1];
+                            })
+                            ->toArray();
+                        $approvalHeader = ['to' => 'EHS, Sustainability & BE', 'no' => $data->bastno, 'note' => $request->input('userRemark') ?? '-'];
+                        $mail = Mail::send('mail.rejectmail', ['data' => $approvalHeader], function ($message) use ($approvalHeader, $sendMail) {
+                            $message->subject('Pemberitahuan Reject BAST: ' . $approvalHeader['no']);
+                            $message->to($sendMail);
+                            // $message->cc('muhammadjakaria8@gmail.com');
+                        });
+                    }
+                } else {
+                    // Untuk Purchasing saja
+                    DB::transaction(function () use ($id, $field, $status, $userappv, $usrappv) {
                         DB::table('bast')
                             ->where('id_bast', $id)
-                            ->update(['status' => $status, $usrappv => $userappv, $field => Carbon::now(), $field2 => $rate, $field3 => $notes, 'updated_at' => Carbon::now()]);
+                            ->update(['status' => $status, $usrappv => $userappv, $field => Carbon::now(), 'updated_at' => Carbon::now()]);
                     });
 
                     //send email to user APPROVAL PURCH OUTSTANDING
                     $sendMail = DB::table('departemen2')
                         ->select('emailmgr1', 'emailspv1')
-                        ->where('alias', 'PURCH')
+                        ->where('alias', 'SCWH')
                         ->get()
                         ->flatMap(function ($item) {
                             return [$item->emailmgr1, $item->emailspv1];
                         })
                         ->toArray();
-                    $approvalHeader = ['to' => 'Purchasing', 'no' => $data->bastno, 'note' => $request->input('userRemark') ?? '-'];
+                    $approvalHeader = ['to' => 'Supply Chain & Warehouse', 'no' => $data->bastno, 'note' => $request->input('ehsnotes') ?? '-'];
                     $mail = Mail::send('mail.approvalmail', ['data' => $approvalHeader], function ($message) use ($approvalHeader, $sendMail) {
                         $message->subject('Pemberitahuan Approval BAST: ' . $approvalHeader['no']);
                         $message->to($sendMail);
                         // $message->cc('muhammadjakaria8@gmail.com');
                     });
-                } else {
-                    DB::transaction(function () use ($id, $field, $field2, $field3, $rate, $notes, $userappv, $usrappv) {
-                        DB::table('bast')
-                            ->where('id_bast', $id)
-                            ->update([$usrappv => $userappv, $field => Carbon::now(), $field2 => $rate, $field3 => $notes, 'updated_at' => Carbon::now()]);
-                    });
-
-                    //send email to user REJECT EHS OUTSTANDING
-                    $sendMail = DB::table('departemen2')
-                        ->select('emailmgr1', 'emailspv1')
-                        ->where('alias', 'EHS')
-                        ->get()
-                        ->flatMap(function ($item) {
-                            return [$item->emailmgr1, $item->emailspv1];
-                        })
-                        ->toArray();
-                    $approvalHeader = ['to' => 'EHS, Sustainability & BE', 'no' => $data->bastno, 'note' => $request->input('userRemark') ?? '-'];
-                    $mail = Mail::send('mail.rejectmail', ['data' => $approvalHeader], function ($message) use ($approvalHeader, $sendMail) {
-                        $message->subject('Pemberitahuan Reject BAST: ' . $approvalHeader['no']);
-                        $message->to($sendMail);
-                        // $message->cc('muhammadjakaria8@gmail.com');
-                    });
                 }
-            } else {
-                // Untuk Purchasing saja
-                DB::transaction(function () use ($id, $field, $status, $userappv, $usrappv) {
-                    DB::table('bast')
-                        ->where('id_bast', $id)
-                        ->update(['status' => $status, $usrappv => $userappv, $field => Carbon::now(), 'updated_at' => Carbon::now()]);
-                });
-
-                //send email to user APPROVAL PURCH OUTSTANDING
-                $sendMail = DB::table('departemen2')
-                    ->select('emailmgr1', 'emailspv1')
-                    ->where('alias', 'SCWH')
-                    ->get()
-                    ->flatMap(function ($item) {
-                        return [$item->emailmgr1, $item->emailspv1];
-                    })
-                    ->toArray();
-                $approvalHeader = ['to' => 'Supply Chain & Warehouse', 'no' => $data->bastno, 'note' => $request->input('ehsnotes') ?? '-'];
-                $mail = Mail::send('mail.approvalmail', ['data' => $approvalHeader], function ($message) use ($approvalHeader, $sendMail) {
-                    $message->subject('Pemberitahuan Approval BAST: ' . $approvalHeader['no']);
-                    $message->to($sendMail);
-                    // $message->cc('muhammadjakaria8@gmail.com');
-                });
             }
 
             DB::table('activity')->insert(['name' => $userappv, 'activity' => 'approval', 'time' => Carbon::now()]);
