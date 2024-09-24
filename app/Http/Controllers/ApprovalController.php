@@ -148,7 +148,7 @@ class ApprovalController extends Controller
                                 return [$item->emailmgr1, $item->emailspv1];
                             })
                             ->toArray();
-                        $approvalHeader = ['to' => 'Purchasing', 'no' => $data->bastno, 'note' => $request->input('ehsnotes') ?? '-'];
+                        $approvalHeader = ['to' => 'Purchasing', 'no' => $data->bastno, 'note' => $request->input('userRemark') ?? '-'];
                         $mail = Mail::send('mail.approvalmail', ['data' => $approvalHeader], function ($message) use ($approvalHeader, $sendMail) {
                             $message->subject('Pemberitahuan Approval BAST: ' . $approvalHeader['no']);
                             $message->to($sendMail);
@@ -176,7 +176,7 @@ class ApprovalController extends Controller
                                 return [$item->emailmgr1, $item->emailspv1];
                             })
                             ->toArray();
-                        $approvalHeader = ['to' => 'EHS, Sustainability & BE', 'no' => $data->bastno, 'note' => $request->input('ehsnotes') ?? '-'];
+                        $approvalHeader = ['to' => 'EHS, Sustainability & BE', 'no' => $data->bastno, 'note' => $request->input('userRemark') ?? '-'];
                         $mail = Mail::send('mail.rejectmail', ['data' => $approvalHeader], function ($message) use ($approvalHeader, $sendMail) {
                             $message->subject('Pemberitahuan Reject BAST: ' . $approvalHeader['no']);
                             $message->to($sendMail);
@@ -273,7 +273,7 @@ class ApprovalController extends Controller
                                 return [$item->emailmgr1, $item->emailspv1];
                             })
                             ->toArray();
-                        $approvalHeader = ['to' => 'Purchasing', 'no' => $data->bastno, 'note' => $request->input('ehsnotes') ?? '-'];
+                        $approvalHeader = ['to' => 'Purchasing', 'no' => $data->bastno, 'note' => $request->input('userRemark') ?? '-'];
                         $mail = Mail::send('mail.approvalmail', ['data' => $approvalHeader], function ($message) use ($approvalHeader, $sendMail) {
                             $message->subject('Pemberitahuan Approval BAST: ' . $approvalHeader['no']);
                             $message->to($sendMail);
@@ -309,7 +309,7 @@ class ApprovalController extends Controller
                         });
                     }
                 }
-            } elseif ($user->acting == 2 && $user->gol == 4) {
+            } elseif ($user()->gol == 4 || ($user->gol == 3 && $user->acting == 2)) {
                 // Untuk User
                 if ($actappv == '1') {
                     DB::transaction(function () use ($id, $field, $field2, $field3, $status, $rate, $notes, $userappv, $usrappv) {
@@ -327,7 +327,7 @@ class ApprovalController extends Controller
                             return [$item->emailmgr1, $item->emailspv1];
                         })
                         ->toArray();
-                    $approvalHeader = ['to' => 'Purchasing', 'no' => $data->bastno, 'note' => $request->input('ehsnotes') ?? '-'];
+                    $approvalHeader = ['to' => 'Purchasing', 'no' => $data->bastno, 'note' => $request->input('userRemark') ?? '-'];
                     $mail = Mail::send('mail.approvalmail', ['data' => $approvalHeader], function ($message) use ($approvalHeader, $sendMail) {
                         $message->subject('Pemberitahuan Approval BAST: ' . $approvalHeader['no']);
                         $message->to($sendMail);
@@ -349,7 +349,7 @@ class ApprovalController extends Controller
                             return [$item->emailmgr1, $item->emailspv1];
                         })
                         ->toArray();
-                    $approvalHeader = ['to' => 'EHS, Sustainability & BE', 'no' => $data->bastno, 'note' => $request->input('ehsnotes') ?? '-'];
+                    $approvalHeader = ['to' => 'EHS, Sustainability & BE', 'no' => $data->bastno, 'note' => $request->input('userRemark') ?? '-'];
                     $mail = Mail::send('mail.rejectmail', ['data' => $approvalHeader], function ($message) use ($approvalHeader, $sendMail) {
                         $message->subject('Pemberitahuan Reject BAST: ' . $approvalHeader['no']);
                         $message->to($sendMail);

@@ -76,6 +76,7 @@
                                                     }).then((result) => {
                                                         if (result.isConfirmed) {
                                                             const rrnumber = Swal.getInput().value;
+                                                            const currstatus = {{ $row->status }};
                                                             if (!rrnumber) {
                                                                 Swal.fire({
                                                                     icon: 'error',
