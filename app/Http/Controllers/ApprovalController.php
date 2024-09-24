@@ -309,7 +309,7 @@ class ApprovalController extends Controller
                         });
                     }
                 }
-            } elseif ($user()->gol == 4 || ($user->gol == 3 && $user->acting == 2)) {
+            } elseif ($user->gol == 4 || ($user->gol == 3 && $user->acting == 2)) {
                 // Untuk User
                 if ($actappv == '1') {
                     DB::transaction(function () use ($id, $field, $field2, $field3, $status, $rate, $notes, $userappv, $usrappv) {
