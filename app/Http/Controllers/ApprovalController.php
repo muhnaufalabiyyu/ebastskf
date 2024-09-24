@@ -184,7 +184,7 @@ class ApprovalController extends Controller
                         });
                     }
                 } elseif ($currstatus == '4') {
-                    DB::transaction(function () use ($id, $user, $status, $userappv, $usrappv, $rrno) {
+                    DB::transaction(function () use ($id, $user, $status, $userappv, $usrappv, $rrno, $data) {
                         DB::table('bast')
                             ->where('id_bast', $id)
                             ->update(['status' => $status, $usrappv => $userappv, 'rrno' => $rrno, 'rrdt' => Carbon::now(), 'rrusr' => $user->name, 'updated_at' => Carbon::now()]);
@@ -309,6 +309,29 @@ class ApprovalController extends Controller
                         });
                     }
                 }
+            } elseif ($user->dept == 'PURCH') {
+                // Untuk Purchasing saja
+                DB::transaction(function () use ($id, $field, $status, $userappv, $usrappv) {
+                    DB::table('bast')
+                        ->where('id_bast', $id)
+                        ->update(['status' => $status, $usrappv => $userappv, $field => Carbon::now(), 'updated_at' => Carbon::now()]);
+                });
+
+                //send email to user APPROVAL PURCH OUTSTANDING
+                $sendMail = DB::table('departemen2')
+                    ->select('emailmgr1', 'emailspv1')
+                    ->where('alias', 'SCWH')
+                    ->get()
+                    ->flatMap(function ($item) {
+                        return [$item->emailmgr1, $item->emailspv1];
+                    })
+                    ->toArray();
+                $approvalHeader = ['to' => 'Supply Chain & Warehouse', 'no' => $data->bastno, 'note' => $request->input('ehsnotes') ?? '-'];
+                $mail = Mail::send('mail.approvalmail', ['data' => $approvalHeader], function ($message) use ($approvalHeader, $sendMail) {
+                    $message->subject('Pemberitahuan Approval BAST: ' . $approvalHeader['no']);
+                    $message->to($sendMail);
+                    // $message->cc('muhammadjakaria8@gmail.com');
+                });
             } else {
                 if ($user->gol == 4 || ($user->gol == 3 && $user->acting == 2)) {
                     // Untuk User
@@ -357,29 +380,6 @@ class ApprovalController extends Controller
                             // $message->cc('muhammadjakaria8@gmail.com');
                         });
                     }
-                } else {
-                    // Untuk Purchasing saja
-                    DB::transaction(function () use ($id, $field, $status, $userappv, $usrappv) {
-                        DB::table('bast')
-                            ->where('id_bast', $id)
-                            ->update(['status' => $status, $usrappv => $userappv, $field => Carbon::now(), 'updated_at' => Carbon::now()]);
-                    });
-
-                    //send email to user APPROVAL PURCH OUTSTANDING
-                    $sendMail = DB::table('departemen2')
-                        ->select('emailmgr1', 'emailspv1')
-                        ->where('alias', 'SCWH')
-                        ->get()
-                        ->flatMap(function ($item) {
-                            return [$item->emailmgr1, $item->emailspv1];
-                        })
-                        ->toArray();
-                    $approvalHeader = ['to' => 'Supply Chain & Warehouse', 'no' => $data->bastno, 'note' => $request->input('ehsnotes') ?? '-'];
-                    $mail = Mail::send('mail.approvalmail', ['data' => $approvalHeader], function ($message) use ($approvalHeader, $sendMail) {
-                        $message->subject('Pemberitahuan Approval BAST: ' . $approvalHeader['no']);
-                        $message->to($sendMail);
-                        // $message->cc('muhammadjakaria8@gmail.com');
-                    });
                 }
             }
 
