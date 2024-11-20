@@ -188,14 +188,14 @@
                                     <tr>
                                         <td>1.</td>
                                         <td><input name="itemname1" type="text" class="form-control"
-                                            value="" placeholder="Add item here"></td>
+                                            value="" placeholder="Add item here" required></td>
                                         <td><input name="itemspec1" type="text" class="form-control"
-                                            value=""></td>
+                                            value="" required></td>
                                         <td style="width: 100px"><input name="qtyitem1" type="number" class="form-control"
-                                                value="">
+                                                value="" required>
                                         </td>
                                         <td style="width: 100px"><input name="unititem1" type="text" class="form-control"
-                                            value=""></td>
+                                            value="" required></td>
                                     </tr>
                                     <tr>
                                         <td>2.</td>
