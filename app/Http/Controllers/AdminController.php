@@ -16,6 +16,19 @@ class AdminController extends Controller
         return view('administrator.bastdata', compact('bastdata'));
     }
 
+    public function updatestatus(Request $request)
+    {
+        $update = DB::table('bast')
+            ->where('id_bast', $request->id)
+            ->update(['status' => $request->status]);
+
+        if ($update > 0) {
+            return response()->json(['message' => 'Status updated successfully'], 200);
+        }
+
+        return response()->json(['message' => 'No changes made or invalid request'], 400);
+    }
+
     public function deletebast(Request $request, $id)
     {
         try {

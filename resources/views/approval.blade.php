@@ -194,7 +194,7 @@
                                                 </div>
                                         </div>
                                         <div class="modal-footer">
-                                            <button type="submit" class="btn btn-primary">Submit</button>
+                                            <button type="submit" class="btn btn-primary submit">Submit</button>
                                         </div>
                                         </form>
                                     </div>
@@ -257,7 +257,7 @@
                                                 </div>
                                         </div>
                                         <div class="modal-footer">
-                                            <button type="submit" class="btn btn-primary">Submit</button>
+                                            <button type="submit" class="btn btn-primary submit">Submit</button>
                                         </div>
                                         </form>
                                     </div>
@@ -293,6 +293,12 @@
     @endif
 
     <script>
+        $('.submit').click(function() {
+            var $thisButton = $(this);
+            $thisButton.hide().attr('hidden', true);
+            $thisButton.after('<div class="spinner-border spinner-border-sm" role="status"><span class="visually-hidden">Loading...</span></div>');  // Menambahkan spinner setelah tombol
+        });
+        
         $('.approve-button').click(function(e) {
             e.preventDefault();
             var route = $(this).data('route');
