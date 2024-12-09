@@ -58,9 +58,6 @@
                                 @endif
                             </td>
                             <td>
-                                <!-- <a href="{{ route('detailbast', ['id' => $bast->id_bast]) }}"
-                                                class="btn btn-info btn-sm" style="width: fit-content;">
-                                                <i class="bi bi-info-circle-fill"></i></a> -->
                                 <a href="{{ route('getpdf', ['id' => $bast->id_bast, 'supplier_id' => $bast->supplier_id, 'action' => 'stream']) }}"
                                     class="btn btn-info btn-sm" style="width: fit-content;" target="_blank">
                                     <i class="bi bi-file-earmark-pdf-fill"></i></a>

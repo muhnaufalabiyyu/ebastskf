@@ -67,7 +67,6 @@ Route::group(['middleware' => ['cekActing', 'auth']], function () {
     Route::post('editusersupplier/{id}', 'UserController@editusersupplier')->name('editusersupplier');
     // Route Data BAST
     Route::get('bastdata', 'AdminController@indexbast')->name('bastdata');
-    Route::get('detailbast/id_bast={id}', 'AdminController@detailbast')->name('detailbast');
     Route::post('update-status', 'AdminController@updatestatus')->name('updatestatus');
     Route::post('deletebast/{id}', 'AdminController@deletebast')->name('deletebast');
     // Route Data Department
