@@ -36,11 +36,11 @@
                 </tr>
                 <tr>
                     <td style="white-space: nowrap">Work Start</td>
-                    <td>:&nbsp {{ $row->work_start }}</td>
+                    <td>:&nbsp {{ $row->workstart }}</td>
                 </tr>
                 <tr>
                     <td style="white-space: nowrap">Work End</td>
-                    <td>:&nbsp {{ $row->work_end }}</td>
+                    <td>:&nbsp {{ $row->workend }}</td>
                 </tr>
                 </table>
         </div>
@@ -125,7 +125,7 @@
         @else
             <p><b>BAST Created at</b><br>
                 @foreach ($detail as $dt4)
-                    <b>{{ $dt4->createdat }}</b>
+                    <b>{{ $dt4->created_at }}</b>
             </p>
             @endforeach
             @endif
@@ -181,7 +181,7 @@
                     <ul>
                         <li><strong>Approved by EHS</strong></li>
                         <span>
-                            @if (is_null($row->ehsappv_dt) || is_null($row->ehsappv))
+                            @if (is_null($row->ehsappvdt) || is_null($row->ehsappv))
                                 <i>Waiting Approval</i>
                             @else
                                 [{{ $row->ehsappv_dt }}] | [{{ $row->ehsappv }}] <br> Remark : {{ $row->ehsnotes }} <br>
@@ -193,10 +193,10 @@
                     <ul>
                         <li><strong>Approved by User</strong></li>
                         <span>
-                            @if (is_null($row->userappv_dt) || is_null($row->userappv))
+                            @if (is_null($row->userappvdt) || is_null($row->userappv))
                                 <i>Waiting Approval</i>
                             @else
-                                [{{ $row->userappv_dt }}] | [{{ $row->userappv }}] <br> Remark : {{ $row->usernotes }}
+                                [{{ $row->userappvdt }}] | [{{ $row->userappv }}] <br> Remark : {{ $row->usernotes }}
                             @endif
                         </span>
                     </ul>
@@ -204,10 +204,10 @@
                     <ul>
                         <li><strong>Approved by Purchasing</strong></li>
                         <span>
-                            @if (is_null($row->purchappv_dt) || is_null($row->purchappv))
+                            @if (is_null($row->purchappvdt) || is_null($row->purchappv))
                                 <i>Waiting Approval</i>
                             @else
-                                [{{ $row->purchappv_dt }}] | [{{ $row->purchappv }}]
+                                [{{ $row->purchappvdt }}] | [{{ $row->purchappv }}]
                             @endif
                         </span>
                     </ul>
@@ -215,10 +215,10 @@
                     <ul>
                         <li><strong>Done RR by Warehouse</strong></li>
                         <span>
-                            @if (is_null($row->rr_dt))
+                            @if (is_null($row->rrdt))
                                 <i>Waiting RR from Warehouse</i>
                             @else
-                                [{{ $row->rr_dt }}] <br> RR Number : {{ $row->rrno }}
+                                [{{ $row->rrdt }}] <br> RR Number : {{ $row->rrno }}
                             @endif
                         </span>
                     </ul>
