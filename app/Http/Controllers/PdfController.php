@@ -16,6 +16,22 @@ class PdfController extends Controller
         try {
             $user = Auth::user();
             $bast = DB::table('bast')->select('*', DB::raw('DATE_FORMAT(bastdt, "%d-%m-%Y") as bast_dt'), DB::raw('DATE_FORMAT(workstart, "%d-%m-%Y") as work_start'), DB::raw('DATE_FORMAT(workend, "%d-%m-%Y") as work_end'), DB::raw('DATE_FORMAT(userappvdt, "%d-%m-%Y %H:%i:%s") as userappv_dt'), DB::raw('DATE_FORMAT(ehsappvdt, "%d-%m-%Y %H:%i:%s") as ehsappv_dt'), DB::raw('DATE_FORMAT(purchappvdt, "%d-%m-%Y %H:%i:%s") as purchappv_dt'), DB::raw('DATE_FORMAT(rrdt, "%d-%m-%Y %H:%i:%s") as rr_dt'), DB::raw('DATE_FORMAT(created_at, "%d-%m-%Y %H:%i:%s") as createdat'))->where('id_bast', $id)->get();
+            $itemdetail = DB::table('bast')
+                ->select('item_in_charge', 'item_in_charge_qty', 'item_in_charge_unit')
+                ->where('id_bast', $id)
+                ->first();
+
+            $itemname = explode('||', $itemdetail->item_in_charge);
+            $itemqty = explode('||', $itemdetail->item_in_charge_qty);
+            $itemunit = explode('||', $itemdetail->item_in_charge_unit);
+
+            $items = collect($itemname)->map(function ($name, $index) use ($itemqty, $itemunit) {
+                return [
+                    'name' => $name,
+                    'qty' => $itemqty[$index] ?? null,
+                    'unit' => $itemunit[$index] ?? null,
+                ];
+            });
 
             $bastno = json_decode($bast->pluck('bastno'), true)[0];
             $pono = $bast->pluck('pono');
@@ -33,10 +49,10 @@ class PdfController extends Controller
             $signature = DB::table('users')->where('name', $spname)->value('signaturepath');
 
             if ($user->acting == 2 || $user->acting == 3 || $user->acting == 999) {
-                $pdf = app('dompdf.wrapper')->loadView('pdfbast', compact('bast', 'supplier', 'userdata', 'signature', 'signatureuser', 'signaturepurch'));
+                $pdf = app('dompdf.wrapper')->loadView('pdfbast', compact('bast', 'supplier', 'userdata', 'items', 'signature', 'signatureuser', 'signaturepurch'));
             } elseif ($user->acting == 1) {
                 if ($user->supplier_id == $supplier_id) {
-                    $pdf = app('dompdf.wrapper')->loadView('pdfbast', compact('bast', 'supplier', 'userdata', 'signature', 'signatureuser', 'signaturepurch'));
+                    $pdf = app('dompdf.wrapper')->loadView('pdfbast', compact('bast', 'supplier', 'userdata', 'items', 'signature', 'signatureuser', 'signaturepurch'));
                 } else {
                     return redirect()->route('history');
                 }

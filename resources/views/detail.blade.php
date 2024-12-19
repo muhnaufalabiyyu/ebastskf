@@ -156,12 +156,14 @@
                 <th>Satuan</th>
             </thead>
             <tbody>
+                @foreach ($items as $item)
                 <tr>
                     <td style="text-align: left !important">{{ $loop->iteration }}.</td>
-                    <td style="text-align: left !important">{{ $row->itemname1 }}</td>
-                    <td>{{ $row->qtyitem1 }}</td>
-                    <td>{{ $row->unititem1 }}</td>
+                    <td style="text-align: left !important">{{ $item['name'] }}</td>
+                    <td>{{ $item['qty'] }}</td>
+                    <td>{{ $item['unit'] }}</td>
                 </tr>
+                @endforeach
             </tbody>
         </table>
     </div>
