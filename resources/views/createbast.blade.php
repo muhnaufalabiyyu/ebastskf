@@ -198,7 +198,7 @@
                         </table>
                     </div>
                 </div>
-                <button type="submit" class="btn btn-primary mt-3">Create BAST</button>
+                <button type="submit" class="btn btn-primary mt-3" id="createbtn" disabled>Create BAST</button>
             </form>
         </div>
     </div>
@@ -236,22 +236,23 @@
 
     const itemqty = document.getElementById('itemCharge');
     const tbody = document.getElementById('tableBody');
+    const createbtn = document.getElementById('createbtn');
 
     itemqty.addEventListener('change', function () {
         const qty = parseInt(this.value, 10);
         tbody.innerHTML = '';
+        createbtn.removeAttribute('disabled');
 
         for (let i = 1; i <= qty; i++) {
             const row = document.createElement('tr');
-            
+
             row.innerHTML = `
             <td>${i}.</td>
-            <td><input name="items[${i}][itemname]" type="text" class="form-control" placeholder="Add item here"></td>
-            <td><input name="items[${i}][itemspec]" type="text" class="form-control"></td>
-            <td style="width: 100px"><input name="items[${i}][qtyitem]" type="number" class="form-control"></td>
-            <td style="width: 100px"><input name="items[${i}][unititem]" type="text" class="form-control"></td>
+            <td><input name="items[${i}][itemname]" type="text" class="form-control" onkeypress="return /[0-9a-zA-Z]/i.test(event.key)" placeholder="Add item here" required></td>
+            <td><input name="items[${i}][itemspec]" type="text" class="form-control" onkeypress="return /[0-9a-zA-Z]/i.test(event.key)" required></td>
+            <td style="width: 100px"><input name="items[${i}][qtyitem]" type="number" class="form-control" required></td>
+            <td style="width: 100px"><input name="items[${i}][unititem]" type="text" class="form-control" style="text-transform:uppercase" onkeypress="return /[0-9a-zA-Z]/i.test(event.key)" required></td>
         `;
-
             tbody.appendChild(row);
         }
     });

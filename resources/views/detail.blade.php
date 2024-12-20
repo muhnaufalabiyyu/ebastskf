@@ -101,25 +101,25 @@
             @if ($row->status == 5)
                 <p style="font-style: italic"><b>BAST Approved</b><br>
                     @foreach ($detail as $dt0)
-                        <b>{{ $dt0->rr_dt }}</b>
+                        <b>{{ $dt0->rrdt }}</b>
                 </p>
             @endforeach
         @elseif ($row->status == 4)
             <p><b>Approved by Purchasing</b><br>
                 @foreach ($detail as $dt1)
-                    <b>{{ $dt1->purchappv_dt }}</b>
+                    <b>{{ $dt1->purchappvdt }}</b>
             </p>
             @endforeach
         @elseif ($row->status == 3)
             <p><b>Approved by User</b><br>
                 @foreach ($detail as $dt2)
-                    <b>{{ $dt2->userappv_dt }}</b>
+                    <b>{{ $dt2->userappvdt }}</b>
             </p>
             @endforeach
         @elseif ($row->status == 2)
             <p><b>Approved by EHS</b><br>
                 @foreach ($detail as $dt3)
-                    <b>{{ $dt3->ehsappv_dt }}</b>
+                    <b>{{ $dt3->ehsappvdt }}</b>
             </p>
             @endforeach
         @else

@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Session;
+use Carbon\Carbon;
 use Exception;
 
 class AdminController extends Controller
@@ -18,9 +19,22 @@ class AdminController extends Controller
 
     public function updatestatus(Request $request)
     {
-        $update = DB::table('bast')
-            ->where('id_bast', $request->id)
-            ->update(['status' => $request->status]);
+        $status = $request->status;
+        $currdate = Carbon::now();
+
+        if ($status == '2') {
+            $update = DB::table('bast')
+                ->where('id_bast', $request->id)
+                ->update(['status' => $status, 'ehsappvdt' => $currdate, 'ehsappv' => 'Administrator']);
+        } else if ($status == '3') {
+            $update = DB::table('bast')
+                ->where('id_bast', $request->id)
+                ->update(['status' => $status, 'userappvdt' => $currdate, 'userappv' => 'Administrator']);
+        } else if ($status == '4') {
+            $update = DB::table('bast')
+                ->where('id_bast', $request->id)
+                ->update(['status' => $status, 'purchappvdt' => $currdate, 'purchappv' => 'Administrator']);
+        }
 
         if ($update > 0) {
             return response()->json(['message' => 'Status updated successfully'], 200);
