@@ -18,7 +18,15 @@ class HistoryController extends Controller
             $bast = DB::table('bast')->get();
         }
 
-        return view('history', compact('bast'));
+        $supplier_id = $bast->pluck('supplier_id');
+
+        $spname = DB::table('supplier')
+                    ->where('supplier_code', $supplier_id)
+                    ->value('supplier_name');
+        
+        // dd($spname);
+
+        return view('history', compact('bast', 'spname'));
     }
 
     function detail($id, $supplier_id)

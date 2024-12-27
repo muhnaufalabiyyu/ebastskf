@@ -15,6 +15,7 @@
 <section class="section">
     <div class="card py-4">
         <div class="card-body">
+            <button class="btn btn-success" id="btnExport">Export</button>
             <table class="table table-bordered table-striped text-center" id="tbbastdata"
                 style="margin-bottom: 1rem; font-weight: 500">
                 <thead>
@@ -48,12 +49,16 @@
                                         <option value="5">Approved</option>
                                     </select>
                                 @else
-                                    <select name="status" id="statusbast" class="form-control text-center" data-id="{{$bast->id_bast}}"
-                                        onchange="updateStatus(this)">
-                                        <option value="1" {{ $bast->status == '1' ? 'selected' : '' }}>On Approval EHS</option>
-                                        <option value="2" {{ $bast->status == '2' ? 'selected' : '' }}>On Approval User</option>
-                                        <option value="3" {{ $bast->status == '3' ? 'selected' : '' }}>On Approval Purchasing</option>
-                                        <option value="4" {{ $bast->status == '4' ? 'selected' : '' }}>On RR Warehouse</option>
+                                    <select name="status" id="statusbast" class="form-control text-center"
+                                        data-id="{{ $bast->id_bast }}" onchange="updateStatus(this)">
+                                        <option value="1" {{ $bast->status == '1' ? 'selected' : '' }}>On Approval
+                                            EHS</option>
+                                        <option value="2" {{ $bast->status == '2' ? 'selected' : '' }}>On Approval
+                                            User</option>
+                                        <option value="3" {{ $bast->status == '3' ? 'selected' : '' }}>On Approval
+                                            Purchasing</option>
+                                        <option value="4" {{ $bast->status == '4' ? 'selected' : '' }}>On RR
+                                            Warehouse</option>
                                     </select>
                                 @endif
                             </td>
@@ -108,12 +113,54 @@
                     @endforeach
                 </tbody>
             </table>
+            <div class="modal fade" id="modalExport" tabindex="-1" role="dialog"
+                aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+                <div class="modal-dialog modal-dialog-centered" role="document">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title" id="exampleModalLongTitle">Export Data</h5>
+                            <button type="button" class="btn btn-danger btn-sm closeHistory">
+                                <i class="bi bi-x"></i>
+                            </button>
+                        </div>
+                        <div class="modal-body">
+                            <form action="">
+                                @csrf
+                                <div class="row">
+                                    <div class="form-group col-6">
+                                        <label for="datefrom" class="form-label">From:</label>
+                                        <input type="date" name="datefrom" id="datefrom" class="form-control" required>
+                                    </div>
+                                    <div class="form-group col-6">
+                                        <label for="dateto" class="form-label">To:</label>
+                                        <input type="date" name="dateto" id="dateto" class="form-control" required>
+                                    </div>
+                                </div>
+                            </form>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary closeExport">Close</button>
+                            <button type="button" class="btn btn-success">
+                                <i class="bi bi-file-earmark-excel-fill"></i>Export</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
         </div>
     </div>
 </section>
 @endsection
 
 @section('blockjs')
+<script>
+    $('#btnExport').click(function () {
+        $('#modalExport').modal('show');
+    });
+
+    $('.closeExport').click(function () {
+        $('#modalExport').modal('hide');
+    });
+</script>
 <script>
     $("#tbbastdata").DataTable({
         dom: 'Bfrtip',
@@ -148,7 +195,7 @@
                     icon: "success"
                 }).then((result) => {
                     if (result.isConfirmed) {
-                    location.reload();
+                        location.reload();
                     }
                 });
             },
