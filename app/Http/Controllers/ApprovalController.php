@@ -209,7 +209,7 @@ class ApprovalController extends Controller
                             }
 
                             if (!empty($validEmails)) {
-                                $usr_fin = DB::table('users')->where('dept', 'FINACC')->get();
+                                $usr_fin = DB::table('users')->where('dept', 'FINACC')->first();
                                 $headerMail = ['to' => $supp->NamaSupplier, 'no' => $data->bastno, 'note' => '-'];
                                 $mail = Mail::send('mail.suppliermail', ['data' => $headerMail], function ($message) use ($validEmails, $usr_fin) {
                                     $message->subject('Pemberitahuan approval BAST telah selesai');
