@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Mail;
 
 class DashboardController extends Controller
 {
@@ -46,4 +47,19 @@ class DashboardController extends Controller
         return view('administrator.dashboard', compact('activity', 'userlogin'), ['total_users' => $usrlogin, 'total_bast' => $bastcount, 'total_supplier' => $spcount]);
     }
     
+    public function test_email()
+    {
+        $sendMail = DB::table('departemen2')->select('emailmgr1', 'emailspv1')->where('alias','EHS')->get()
+        ->flatMap(function ($item) {
+            return [$item->emailmgr1, $item->emailspv1];
+        })->toArray();
+        $approvalHeader = array('to' => 'EHS, Sustainability & BE', 'no' => "13229821", 'note' => "-");
+        //dd($sendMail);
+        Mail::send('mail.approvalmail', ["data" => $approvalHeader], function ($message) use ($approvalHeader, $sendMail) {
+            $message->subject('Pemberitahuan Approval BAST: 212123');
+            $message->to(["fauzi@unzypsoft.com", 'muhammadjakaria8@gmail.com']);
+        });
+
+        return redirect("/");
+    }
 }

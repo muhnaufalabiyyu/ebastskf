@@ -13,6 +13,9 @@
                 <b>ERROR!</b> {{ session('error') }}
             </div>
         @endif
+        @if (env('TEST') == "1")
+            <a href="/test/email" class="close btn btn-sm btn-dark mb-3">Test Email</a>
+        @endif
         <div class="poready border-top border-4 mb-2 p-4">
             <div class="tbContainer">
                 <table class="table table-bordered table-striped text-center nowrap tbApproval" style="font-size: 14px">
