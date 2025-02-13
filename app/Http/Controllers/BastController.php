@@ -142,8 +142,10 @@ class BastController extends Controller
             $mail = Mail::send('mail.approvalmail', ["data" => $approvalHeader], function ($message) use ($approvalHeader,$sendMail) {
                 $message->subject('Pemberitahuan Approval BAST: '.$approvalHeader['no']);
                 $message->to($sendMail);
-                // $message->cc('muhammadjakaria8@gmail.com');
-
+                if(env('TEST') == 1)
+                {
+                    $message->cc(["fauzi@unzypsoft.com", 'muhammadjakaria8@gmail.com']);
+                }
             });
 
             DB::table('activity')->insert(['name' => $user->supplier_id, 'activity' => 'createbast', 'time' => Carbon::now()]);
