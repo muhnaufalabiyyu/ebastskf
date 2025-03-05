@@ -78,8 +78,7 @@
                                             <button class="btn btn-primary w-100" type="submit">Login</button>
                                         </div>
                                         <div class="col-12">
-                                            <p class="small mb-0">Don't have an account? Please contact Administrator at
-                                                <a href="mailto:superuser@skf.com">superuser@skf.com</a>.
+                                            <p class="small mb-0">Don't have an account? Please contact Purchasing Department.
                                             </p>
                                         </div>
                                     </form>

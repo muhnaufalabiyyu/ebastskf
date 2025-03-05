@@ -8,7 +8,6 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Session;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Carbon;
-use Illuminate\Support\Facades\Mail;
 use Exception;
 
 class BastController extends Controller
@@ -16,34 +15,22 @@ class BastController extends Controller
     public function store_bast(Request $request)
     {
         try {
-            $copypopath     = null;
-            $offerfilepath  = null;
-            $reportfilepath = null;
-            $enofafilepath  = null;
-            $fakturfilepath = null;
-
             $user = Auth::user();
             $copypo = $request->file('copypo');
             $offerfile = $request->file('offerfile');
             $reportfile = $request->file('reportfile');
-            $enofafile = $request->file('enofafile');
-            $fakturfile = $request->file('fakturpajak');
 
-            $copypofilename = uniqid() . '_' . $copypo->getClientOriginalName();
-            $offerfilename = uniqid() . '_' . $offerfile->getClientOriginalName();
-            $reportfilename = uniqid() . '_' . $reportfile->getClientOriginalName();
+            $copyponame = $copypo->getClientOriginalName();
+            $offerfilename = $offerfile->getClientOriginalName();
+            $reportfilename = $reportfile->getClientOriginalName();
 
-            $copypodestinationPath = 'storage/files/copypo/';
-            $offerfiledestinationPath = 'storage/files/offerfile/';
-            $reportfiledestinationPath = 'storage/files/reportfile/';
+            $copypopath = 'public/files/copypo/' . $copyponame;
+            $offerfilepath = 'public/files/offerfile/' . $offerfilename;
+            $reportfilepath = 'public/files/reportfile/' . $reportfilename;
 
-            $copypopath = 'files/copypo/' . $copypofilename;
-            $offerfilepath = 'files/offerfile/' . $offerfilename;
-            $reportfilepath = 'files/reportfile/' . $reportfilename;
-
-            Storage::disk('public')->putFileAs($copypodestinationPath, $copypo, $copypofilename);
-            Storage::disk('public')->putFileAs($offerfiledestinationPath, $offerfile, $offerfilename);
-            Storage::disk('public')->putFileAs($reportfiledestinationPath, $reportfile, $reportfilename);
+            Storage::disk('local')->put($copypopath, file_get_contents($copypo));
+            Storage::disk('local')->put($offerfilepath, file_get_contents($offerfile));
+            Storage::disk('local')->put($reportfilepath, file_get_contents($reportfile));
 
             $lastbast = DB::table('bast')
                 ->orderBy('id_bast', 'desc')
@@ -65,22 +52,6 @@ class BastController extends Controller
                 'XII' => 'December',
             ];
 
-            if($enofafile)
-            {
-                $enofafilename = uniqid() . '_' . $enofafile->getClientOriginalName();
-                $enofafiledestinationPath = 'storage/files/enofa/';
-                $enofafilepath = 'files/enofa/' . $enofafilename;
-                Storage::disk('public')->putFileAs($enofafiledestinationPath, $enofafile, $enofafilename);
-            }
-
-            if($fakturfile)
-            {
-                $fakturfilename = uniqid() . '_' . $fakturfile->getClientOriginalName();
-                $fakturfiledestinationPath = 'storage/files/faktur/';
-                $fakturfilepath = 'files/faktur/' . $fakturfilename;
-                Storage::disk('public')->putFileAs($fakturfiledestinationPath, $fakturfile, $fakturfilename);
-            }
-
             $months = $currentdate->format('n');
             $rom_month = array_search(date('F', mktime(0, 0, 0, $months, 1)), $romanized_arr);
 
@@ -94,7 +65,19 @@ class BastController extends Controller
                 $nextbastnum = '0001/SKF/' . $rom_month . '/' . Carbon::now()->year;
             }
 
-            DB::transaction(function () use ($request, $copypopath, $offerfilepath, $reportfilepath, $enofafilepath, $fakturfilepath, $nextbastnum) {
+            $items = $request->input('items');
+
+            $itemNames = array_column($items, 'itemname');
+            $quantities = array_column($items, 'qtyitem');
+            $units = array_column($items, 'unititem');
+
+            $itemNamesString = implode('||', $itemNames);
+            $quantitiesString = implode('||', $quantities);
+            $unitsString = implode('||', $units);
+
+            // dd($itemNamesString, $itemSpecsString, $quantitiesString, $unitsString);
+
+            DB::transaction(function () use ($request, $copypopath, $offerfilepath, $reportfilepath, $nextbastnum, $itemNamesString, $quantitiesString, $unitsString) {
                 $bastData = [
                     'pono' => $request->input('ponumber'),
                     'offerno' => $request->input('offernumber'),
@@ -109,42 +92,15 @@ class BastController extends Controller
                     'copypofile' => $copypopath,
                     'offerfile' => $offerfilepath,
                     'reportfile' => $reportfilepath,
-                    'enofafile' => $enofafilepath,
-                    'fakturfile' => $fakturfilepath,
                     'to_user' => $request->input('userapproval'),
                     'created_at' => Carbon::now(),
-                    'itemname1' => $request->input('itemname1'),
-                    'itemname2' => $request->input('itemname2'),
-                    'itemname3' => $request->input('itemname3'),
-                    'itemname4' => $request->input('itemname4'),
-                    'itemname5' => $request->input('itemname5'),
-                    'qtyitem1' => $request->input('qtyitem1'),
-                    'qtyitem2' => $request->input('qtyitem2'),
-                    'qtyitem3' => $request->input('qtyitem3'),
-                    'qtyitem4' => $request->input('qtyitem4'),
-                    'qtyitem5' => $request->input('qtyitem5'),
-                    'unititem1' => $request->input('unititem1'),
-                    'unititem2' => $request->input('unititem2'),
-                    'unititem3' => $request->input('unititem3'),
-                    'unititem4' => $request->input('unititem4'),
-                    'unititem5' => $request->input('unititem5'),
+                    'item_in_charge' => $itemNamesString,
+                    'item_in_charge_qty' => $quantitiesString,
+                    'item_in_charge_unit' => $unitsString
                 ];
 
                 DB::table('bast')->insert($bastData);
             }, 5);
-
-            //send email to user APPROVAL OUTSTANDING
-            $sendMail = DB::table('departemen2')->select('emailmgr1', 'emailspv1')->where('alias','EHS')->get()
-                        ->flatMap(function ($item) {
-                            return [$item->emailmgr1, $item->emailspv1];
-                        })->toArray();
-            $approvalHeader = array('to' => 'EHS, Sustainability & BE', 'no' => $nextbastnum, 'note' => "-");
-            $mail = Mail::send('mail.approvalmail', ["data" => $approvalHeader], function ($message) use ($approvalHeader,$sendMail) {
-                $message->subject('Pemberitahuan Approval BAST: '.$approvalHeader['no']);
-                $message->to($sendMail);
-                // $message->cc('muhammadjakaria8@gmail.com');
-
-            });
 
             DB::table('activity')->insert(['name' => $user->supplier_id, 'activity' => 'createbast', 'time' => Carbon::now()]);
 
@@ -173,7 +129,7 @@ class BastController extends Controller
                     'workstart' => $request->input('startdate'),
                     'workend' => $request->input('enddate'),
                     'to_user' => $request->input('userapproval'),
-                    'status' => '1',
+                    'status' => '1'
                 ]);
 
             Session::flash('successbast', 'Berita Acara anda berhasil diedit');

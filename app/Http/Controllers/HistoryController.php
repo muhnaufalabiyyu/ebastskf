@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Collection;
 
 class HistoryController extends Controller
 {
@@ -17,28 +18,45 @@ class HistoryController extends Controller
             $bast = DB::table('bast')->get();
         }
 
-        return view('history', compact('bast'));
+        $supplier_id = $bast->pluck('supplier_id');
+
+        $spname = DB::table('PURCHASING.dbo.Unzyp_MasterSupplier_ShopSupplies')
+                    ->where('KodeSupplier', $supplier_id)
+                    ->value('supplier_name');
+        
+        // dd($spname);
+
+        return view('history', compact('bast', 'spname'));
     }
 
     function detail($id, $supplier_id)
     {
         $detail = DB::table('bast')
-            ->select("*", DB::raw("FORMAT(bastdt, 'dd-MM-yyyy') as bast_dt"), DB::raw("FORMAT(workstart, 'dd-MM-yyyy') as work_start"), DB::raw("FORMAT(workend, 'dd-MM-yyyy') as work_end"), DB::raw("FORMAT(userappvdt, 'dd-MM-yyyy HH:mm:ss') as userappv_dt"), DB::raw("FORMAT(ehsappvdt, 'dd-MM-yyyy HH:mm:ss') as ehsappv_dt"), DB::raw("FORMAT(purchappvdt, 'dd-MM-yyyy HH:mm:ss') as purchappv_dt"), DB::raw("FORMAT(rrdt, 'dd-MM-yyyy HH:mm:ss') as rr_dt"), DB::raw("FORMAT(created_at, 'dd-MM-yyyy HH:mm:ss') as createdat"))
             ->where('id_bast', $id)
             ->get();
 
-        $pono = $detail->pluck('pono');
-        $purchaseorder = DB::table('purchase_order')
-            ->where(function ($query) use ($pono) {
-                $query->whereIn('no_po', $pono);
-            })
-            ->get();
+        $itemdetail = DB::table('bast')
+            ->select('item_in_charge', 'item_in_charge_qty', 'item_in_charge_unit')
+            ->where('id_bast', $id)
+            ->first();
+
+        $itemname = explode('||', $itemdetail->item_in_charge);
+        $itemqty = explode('||', $itemdetail->item_in_charge_qty);
+        $itemunit = explode('||', $itemdetail->item_in_charge_unit);
+
+        $items = collect($itemname)->map(function ($name, $index) use ($itemqty, $itemunit) {
+            return [
+                'name' => $name,
+                'qty' => $itemqty[$index] ?? null,
+                'unit' => $itemunit[$index] ?? null,
+            ];
+        });
 
         $supplier = DB::table('PURCHASING.dbo.Unzyp_MasterSupplier_ShopSupplies')
             ->where('KodeSupplier', $supplier_id)
             ->get();
 
-        return view('detail', compact('detail', 'supplier', 'purchaseorder'));
+        return view('detail', compact('detail', 'supplier', 'items'));
     }
 
     function editbast($id, $supplier_id)
