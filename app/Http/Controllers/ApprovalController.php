@@ -152,7 +152,6 @@ class ApprovalController extends Controller
                         $mail = Mail::send('mail.approvalmail', ['data' => $approvalHeader], function ($message) use ($approvalHeader, $sendMail) {
                             $message->subject('Pemberitahuan Approval BAST: ' . $approvalHeader['no']);
                             $message->to($sendMail);
-                            // $message->cc('muhammadjakaria8@gmail.com');
                         });
                     } else {
                         DB::transaction(function () use ($id, $field, $field2, $field3, $rate, $notes, $userappv, $usrappv) {
@@ -180,7 +179,6 @@ class ApprovalController extends Controller
                         $mail = Mail::send('mail.rejectmail', ['data' => $approvalHeader], function ($message) use ($approvalHeader, $sendMail) {
                             $message->subject('Pemberitahuan Reject BAST: ' . $approvalHeader['no']);
                             $message->to($sendMail);
-                            // $message->cc('muhammadjakaria8@gmail.com');
                         });
                     }
                 } elseif ($currstatus == '4') {
@@ -209,7 +207,7 @@ class ApprovalController extends Controller
                             }
 
                             if (!empty($validEmails)) {
-                                $usr_fin = DB::table('users')->where('dept', 'FINACC')->get();
+                                $usr_fin = DB::table('users')->where('dept', 'FINACC')->first();
                                 $headerMail = ['to' => $supp->NamaSupplier, 'no' => $data->bastno, 'note' => '-'];
                                 $mail = Mail::send('mail.suppliermail', ['data' => $headerMail], function ($message) use ($validEmails, $usr_fin) {
                                     $message->subject('Pemberitahuan approval BAST telah selesai');
@@ -306,7 +304,6 @@ class ApprovalController extends Controller
                         $mail = Mail::send('mail.rejectmail', ['data' => $approvalHeader], function ($message) use ($approvalHeader, $sendMail) {
                             $message->subject('Pemberitahuan Reject BAST: ' . $approvalHeader['no']);
                             $message->to($sendMail);
-                            // $message->cc('muhammadjakaria8@gmail.com');
                         });
                     }
                 }
@@ -331,7 +328,6 @@ class ApprovalController extends Controller
                 $mail = Mail::send('mail.approvalmail', ['data' => $approvalHeader], function ($message) use ($approvalHeader, $sendMail) {
                     $message->subject('Pemberitahuan Approval BAST: ' . $approvalHeader['no']);
                     $message->to($sendMail);
-                    // $message->cc('muhammadjakaria8@gmail.com');
                 });
             } else {
                 if ($user->gol == 4 || ($user->gol == 3 && $user->acting == 2)) {
@@ -356,7 +352,6 @@ class ApprovalController extends Controller
                         $mail = Mail::send('mail.approvalmail', ['data' => $approvalHeader], function ($message) use ($approvalHeader, $sendMail) {
                             $message->subject('Pemberitahuan Approval BAST: ' . $approvalHeader['no']);
                             $message->to($sendMail);
-                            // $message->cc('muhammadjakaria8@gmail.com');
                         });
                     } else {
                         DB::transaction(function () use ($id, $field, $field2, $field3, $rate, $notes, $userappv, $usrappv) {
@@ -378,7 +373,6 @@ class ApprovalController extends Controller
                         $mail = Mail::send('mail.rejectmail', ['data' => $approvalHeader], function ($message) use ($approvalHeader, $sendMail) {
                             $message->subject('Pemberitahuan Reject BAST: ' . $approvalHeader['no']);
                             $message->to($sendMail);
-                            // $message->cc('muhammadjakaria8@gmail.com');
                         });
                     }
                 }
