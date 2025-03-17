@@ -22,7 +22,7 @@ class HistoryController extends Controller
 
         $spname = DB::table('PURCHASING.dbo.Unzyp_MasterSupplier_ShopSupplies')
                     ->where('KodeSupplier', $supplier_id)
-                    ->value('supplier_name');
+                    ->value('NamaSupplier');
         
         // dd($spname);
 

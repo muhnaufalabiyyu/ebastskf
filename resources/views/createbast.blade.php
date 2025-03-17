@@ -17,13 +17,13 @@
                             <tr>
                                 <td style="width: 120px">Nama Supplier</td>
                                 <td>:&nbsp;</td>
-                                <td>{{ $sp->supplier_name }}
+                                <td>{{ $sp->NamaSupplier }}
                                 </td>
                             </tr>
                             <tr>
                                 <td style="vertical-align: top">Alamat</td>
                                 <td style="vertical-align: top">:&nbsp;</td>
-                                <td>{{ $sp->address }}, {{ $sp->address_2 }}, {{ $sp->city }}
+                                <td>{{ $sp->Alamat }}, {{ $sp->Alamat2 }}, {{ $sp->Kota }}
                                 </td>
                             </tr>
                             <tr>
