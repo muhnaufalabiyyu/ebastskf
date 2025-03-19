@@ -23,7 +23,7 @@
                             <tr>
                                 <td style="vertical-align: top">Alamat</td>
                                 <td style="vertical-align: top">:&nbsp;</td>
-                                <td>{{ $sp->Alamat }}, {{ $sp->Alamat2 }}, {{ $sp->Kota }}
+                                <td>{{ $sp->Alamat1 }}, {{ $sp->Alamat2 }}, {{ $sp->Kota }}
                                 </td>
                             </tr>
                             <tr>
