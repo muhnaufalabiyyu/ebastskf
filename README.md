@@ -10,10 +10,6 @@
 ## About e-BAST System
 e-BAST stands for electronic Berita Acara Serah Terima, or electronic handover of work. This application was developed to meet the needs of PT SKF Indonesia to simplify the process of submitting reports. Previously, suppliers had to wait at PT SKF Indonesia for approval from SKF. With this system in place, suppliers only need to create the report through their respective company systems and wait for system approval. There's no need to come to SKF anymore. Suppliers will only visit SKF to provide the approved report, endorsed by all relevant SKF parties, to the Finance department for payment processing. Additionally, this system ensures that the report documents adhere to the standard set by PT SKF Indonesia, whereas previously, each supplier had their own standards.
 
-## Super User Account
-Email : superuser@skf.com
-Password : asasin123456
-
 ## Copyright
 This application was designed by Putri Yolanda to support digitalization at PT SKF Indonesia. Please use it responsibly and exclusively within PT SKF Indonesia. During the work on this application was also given advice and assistance from Muhammad Naufal Abiyyu. If you intend to copy it, kindly contact the creator.
 
